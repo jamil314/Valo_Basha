@@ -3,18 +3,57 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="@string/menu_home" />
-        <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/menu_gallery" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_slideshow" />
-    </group>
+    <item android:title="Looking For a Valo Basa?">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_maps"
+                    android:icon="@drawable/logo_map"
+                    android:title="Map" />
+            </group>
+        </menu>
+    </item>
+
+    <item android:title="Have an apartment to rent?">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_login"
+                    android:icon="@drawable/logo_login"
+                    android:title="Log in / Sign up" />
+            </group>
+        </menu>
+    </item>
+
+    <item android:title="Help Us Grow">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_feedback"
+                    android:icon="@drawable/logo_feedback"
+                    android:title="Feedback" />
+                <item
+                    android:id="@+id/nav_share"
+                    android:icon="@drawable/logo_share"
+                    android:title="Share" />
+                <item
+                    android:id="@+id/nav_rate_us"
+                    android:icon="@drawable/logo_rate_us"
+                    android:title="Rate Us" />
+            </group>
+        </menu>
+    </item>
+
+    <item android:title="Having Trouble Using This App?">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_tutorial"
+                    android:icon="@drawable/logo_tutorial"
+                    android:title="Tutorial" />
+            </group>
+        </menu>
+    </item>
+
+
 </menu>
