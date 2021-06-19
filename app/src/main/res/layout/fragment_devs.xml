@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment_tutorial">
+    tools:context=".fragment_devs">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textView2"
         android:layout_width="match_parent"
-        android:layout_height="182dp"
-        android:text="This Tutorial Will Help You Understand How To Use All The Features Of This App"
-        android:textSize="20sp" />
+        android:layout_height="381dp"
+        android:text="We are the bekhama coders"
+        android:textSize="25sp" />
 </FrameLayout>
