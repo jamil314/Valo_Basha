@@ -40,6 +40,10 @@
                     android:id="@+id/nav_rate_us"
                     android:icon="@drawable/logo_rate_us"
                     android:title="Rate Us" />
+                <item
+                    android:id="@+id/nav_devs"
+                    android:icon="@drawable/logo_rate_us"
+                    android:title="Developers" />
             </group>
         </menu>
     </item>
