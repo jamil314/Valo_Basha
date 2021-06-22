@@ -5,16 +5,10 @@
     android:layout_height="match_parent"
     tools:context=".fragment_tutorial">
 
-
-    <!-- TODO: Update blank fragment layout -->
-
-
     <TextView
         android:id="@+id/textView"
-        android:layout_width="389dp"
-        android:layout_height="282dp"
-        android:text="This tutorial will help you use this app"
-        android:textSize="20dp" />
-
-
+        android:layout_width="match_parent"
+        android:layout_height="182dp"
+        android:text="This Tutorial Will Help You Understand How To Use All The Features Of This App"
+        android:textSize="20sp" />
 </FrameLayout>

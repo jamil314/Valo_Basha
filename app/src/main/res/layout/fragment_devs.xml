@@ -3,13 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-             
-    tools:context=".Devs">
+    tools:context=".fragment_devs">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/textView2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="We are the bekama coders"
-        android:textSize="20sp" />
+        android:layout_height="381dp"
+        android:text="We are the bekhama coders"
+        android:textSize="25sp" />
 </FrameLayout>

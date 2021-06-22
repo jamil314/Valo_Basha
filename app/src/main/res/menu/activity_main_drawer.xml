@@ -41,10 +41,8 @@
                     android:icon="@drawable/logo_rate_us"
                     android:title="Rate Us" />
                 <item
-
-                    android:id="@+id/nav_devs"
-                    android:icon="@drawable/logo_rate_us"
-
+                    android:id="@+id/nav_developers"
+                    android:icon="@drawable/devs"
                     android:title="Developers" />
             </group>
         </menu>
