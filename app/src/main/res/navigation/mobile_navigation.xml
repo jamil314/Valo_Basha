@@ -7,9 +7,10 @@
 
     <fragment
         android:id="@+id/nav_maps"
-        android:name="com.example.valo_basha.gmap"
+        android:name="com.example.valo_basha.MapsFragment"
         android:label="Map"
-        tools:layout="@layout/fragment_gmap" />
+        tools:layout="@layout/fragment_maps" />
+
 
     <fragment
         android:id="@+id/nav_login"
@@ -32,6 +33,12 @@
         android:id="@+id/nav_developers"
         android:name="com.example.valo_basha.fragment_devs"
         android:label="About Us"
+        tools:layout="@layout/fragment_devs" />
+
+    <fragment
+        android:id="@+id/nav_devs"
+        android:name="com.example.valo_basha.Devs"
+        android:label="Developers"
         tools:layout="@layout/fragment_devs" />
 
 </navigation>

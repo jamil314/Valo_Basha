@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_maps, R.id.nav_feedback, R.id.nav_tutorial, R.id.nav_login)
+                R.id.nav_maps, R.id.nav_feedback, R.id.nav_tutorial, R.id.nav_login, R.id.nav_devs)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
