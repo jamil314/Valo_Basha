@@ -11,6 +11,7 @@
         android:label="Map"
         tools:layout="@layout/fragment_maps" />
 
+
     <fragment
         android:id="@+id/nav_login"
         android:name="com.example.valo_basha.ui.login.fragment_login"
@@ -28,6 +29,11 @@
         android:name="com.example.valo_basha.fragment_tutorial"
         android:label="How to use"
         tools:layout="@layout/fragment_tutorial" />
+    <fragment
+        android:id="@+id/nav_developers"
+        android:name="com.example.valo_basha.fragment_devs"
+        android:label="About Us"
+        tools:layout="@layout/fragment_devs" />
 
     <fragment
         android:id="@+id/nav_devs"
