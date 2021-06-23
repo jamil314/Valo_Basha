@@ -32,9 +32,9 @@ public class gmap extends Fragment {
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private boolean locationPermission = false;
     private FusedLocationProviderClient locationProviderClient;
+    private static final int REQUEST_CODE = 101;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
-
         /**
          * Manipulates the map once available.
          * This callback is triggered when the map is ready to be used.
@@ -46,9 +46,13 @@ public class gmap extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            LatLng sylhet = new LatLng(24.894802, 91.869034);
-            googleMap.addMarker(new MarkerOptions().position(sylhet).title("Marker in Sylhet"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sylhet));
+            LatLng sylhet = new LatLng(24.8924503, 91.884156);
+            LatLng userLocation =new LatLng(global_variables.xco, global_variables.yco);
+            Log.d(userLocation.latitude+":JAMIL: ", userLocation.longitude+"");
+            googleMap.addMarker(new MarkerOptions().position(userLocation).title("You are here!!"));
+            //googleMap.moveCamera(CameraUpdateFactory.newLatLng(sylhet));
+
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15), 5000, null);
 
         }
     };
@@ -62,42 +66,7 @@ public class gmap extends Fragment {
         }
 
 
-        private void getLocationPermission() {
-            String[] permission = {FINE_LOCATION, COURSE_LOCATION};
 
-            if (ContextCompat.checkSelfPermission(this.getActivity().getApplicationContext(), FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-                if (ContextCompat.checkSelfPermission(this.getActivity().getApplicationContext(), COURSE_LOCATION) //this.getActivity().getApplicationContext()
-                        == PackageManager.PERMISSION_GRANTED) {
-                    locationPermission = true;
-                } else {
-                    ActivityCompat.requestPermissions(getActivity(), permission, 1234);
-                }
-            } else {
-                ActivityCompat.requestPermissions(getActivity(), permission, 1234);
-            }
-
-        }
-
-
-        @Override
-        public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-            locationPermission = false;
-
-            switch (requestCode) {
-                case 1234: {
-                    if (grantResults.length > 0) {
-                        for (int i = 0; i < grantResults.length; i++) {
-                            if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                                locationPermission = false;
-                                return;
-                            }
-                        }
-                        locationPermission = true;
-                    }
-                }
-            }
-        }
 
         @Override
         public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
