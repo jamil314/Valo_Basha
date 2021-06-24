@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -22,19 +23,22 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 public class gmap extends Fragment {
+    private static GoogleMap gMap;
     Location currentLocation;
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private boolean locationPermission = false;
     private FusedLocationProviderClient locationProviderClient;
     private static final int REQUEST_CODE = 101;
+    public static Marker marker ;
 
-    private OnMapReadyCallback callback = new OnMapReadyCallback() {
+    private final OnMapReadyCallback callback = new OnMapReadyCallback() {
         /**
          * Manipulates the map once available.
          * This callback is triggered when the map is ready to be used.
@@ -46,17 +50,29 @@ public class gmap extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
+            gMap = googleMap;
+            gMap.getUiSettings().setZoomControlsEnabled(true);
             LatLng sylhet = new LatLng(24.8924503, 91.884156);
-            LatLng userLocation =new LatLng(global_variables.xco, global_variables.yco);
-            Log.d(userLocation.latitude+":JAMIL: ", userLocation.longitude+"");
-            googleMap.addMarker(new MarkerOptions().position(userLocation).title("You are here!!"));
+            LatLng userLocation = new LatLng(global_variables.xco, global_variables.yco);
+            Log.d(userLocation.latitude + ":JAMIL: ", userLocation.longitude + "");
+            marker = gMap.addMarker(new MarkerOptions().position(sylhet).title("You are here!!"));
+
+            //marker.setPosition(sylhet);
             //googleMap.moveCamera(CameraUpdateFactory.newLatLng(sylhet));
 
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15), 5000, null);
+            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sylhet, 15), 5000, null);
 
         }
     };
+    public static void moveTo(LatLng location, float zoom){
+        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, zoom), 5000, null);
+    }
 
+
+
+    public static void moveMarker(LatLng location){
+        marker.setPosition(location);
+    }
 
         @Nullable
         public View onCreateView(@NonNull LayoutInflater inflater,
@@ -72,7 +88,7 @@ public class gmap extends Fragment {
         public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             SupportMapFragment mapFragment =
-                    (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+                    (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.gmap);
             if (mapFragment != null) {
                 mapFragment.getMapAsync(callback);
             }
