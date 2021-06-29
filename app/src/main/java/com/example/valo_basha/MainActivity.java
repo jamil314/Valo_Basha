@@ -5,10 +5,12 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
+import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -19,6 +21,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -28,6 +31,7 @@ import com.google.android.material.navigation.NavigationView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -49,10 +53,13 @@ public class MainActivity extends AppCompatActivity {
     GoogleMap map;
     SupportMapFragment mapFragment;
     SearchView searchView;
+    Button centreButton;
+    LocationManager locationManager;
+    FusedLocationProviderClient fusedLocationProviderClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        Log.d("JAMIL", "MainActivity -> onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -65,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_maps, R.id.nav_feedback, R.id.nav_tutorial, R.id.nav_login, R.id.gmap)
+                R.id.nav_maps, R.id.nav_feedback, R.id.nav_tutorial, R.id.nav_login, R.id.gmap, R.id.nav_developers)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -73,36 +80,34 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
 
-
-
-
+        centreButton = findViewById(R.id.centreButton);
         searchView = findViewById(R.id.search_view);
-        mapFragment  = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.gmap);
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.gmap);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
+                Log.d("JAMIL", "search box clicked");
                 String qlocation = searchView.getQuery().toString();
-                Log.d("JAMIL", "Searched location: "+qlocation);
+                Log.d("JAMIL", "Searched location: " + qlocation);
                 List<Address> addressList = null;
-                if(qlocation != null || !qlocation.equals("")){
+                if (qlocation != null || !qlocation.equals("")) {
                     Geocoder geocoder = new Geocoder(MainActivity.this);
                     try {
                         addressList = geocoder.getFromLocationName(qlocation, 1);
-                    } catch (IOException e){
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                     Log.d("JAMIL", "getting address");
-                    if(addressList.size()==0){
+                    if (addressList.size() == 0) {
                         Log.d("JAMIL", "no result found");
                         return false;
                     }
                     Address address = addressList.get(0);
-                    Log.d("JAMIL", address.getLatitude()+" "+address.getLongitude());
+                    Log.d("JAMIL", address.getLatitude() + " " + address.getLongitude());
                     LatLng qpos = new LatLng(address.getLatitude(), address.getLongitude());
-                    gmap.moveTo(qpos, (float)10.0);
+                    gmap.moveTo(qpos, (float) 10.0);
                     gmap.moveMarker(qpos);
-                }
-                else{
+                } else {
                     Log.d("JAMIL", "location null");
                 }
                 return false;
@@ -114,38 +119,55 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        locationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        getLocation();
+        centreButton = (Button) findViewById(R.id.centreButton);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION
+            }, 100);
+        }
+        centreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("JAMIL", "Permission granted");
+                    getLocation();
+                } else {
+                    Log.d("JAMIL", "Permission denied");
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
+                }
+            }
+        });
+
 
     }
 
     private void getLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]
-                    {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION
+            }, 100);
             return;
         }
-        Task<Location> task = locationProviderClient.getLastLocation();
-        task.addOnSuccessListener(new OnSuccessListener<Location>() {
+        fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
             @Override
-            public void onSuccess(Location location) {
-                if(location != null){
-                    currentLocation = location;
-                    global_variables.xco =currentLocation.getLatitude();
-                    global_variables.yco =currentLocation.getLongitude();
-                    Log.d(global_variables.xco+":JAMIL1", global_variables.yco+"");
-                    Log.d(currentLocation.getLatitude()+":JAMIL2", currentLocation.getLongitude()+":");
-                    Toast.makeText(getApplicationContext(), currentLocation.getLatitude()+" "+currentLocation.getLongitude(), Toast.LENGTH_SHORT).show();
-                    SupportMapFragment supportMapFragment = (SupportMapFragment)
-                            getSupportFragmentManager().findFragmentById(R.id.gmap);
-                }
-                else Log.d("JAMIL", "location failed in main activity");
+            public void onComplete(@NonNull Task<Location> task) {
+                Location location = task.getResult();
+                if (location != null) {
+                    LatLng qpos = new LatLng(location.getLatitude(), location.getLongitude());
+                    gmap.moveTo(qpos, (float) 15.0);
+                    gmap.moveMarker(qpos);
+                    Log.d("JAMIL", location.getLatitude() + " " + location.getLongitude());
+                } else Log.d("JAMIL", "getlocation failed");
             }
         });
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d("JAMIL", "MainActivity -> onCreateOptionMenu");
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -153,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
+        Log.d("JAMIL", "MainActivity -> onSupportNavigateUp");
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();

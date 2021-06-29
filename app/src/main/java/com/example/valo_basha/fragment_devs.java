@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ public class fragment_devs extends Fragment {
     private String mParam2;
 
     public fragment_devs() {
+        Log.d("JAMIL", "Devs -> ()");
         // Required empty public constructor
     }
 
@@ -38,6 +40,7 @@ public class fragment_devs extends Fragment {
      */
     // TODO: Rename and change types and number of parameters
     public static fragment_devs newInstance(String param1, String param2) {
+        Log.d("JAMIL", "Devs -> (;;)");
         fragment_devs fragment = new fragment_devs();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
@@ -48,6 +51,7 @@ public class fragment_devs extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d("JAMIL", "Devs -> onCreate");
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
