@@ -2,6 +2,7 @@ package com.example.valo_basha;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -11,10 +12,14 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
@@ -36,6 +41,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -43,27 +50,17 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class gmap extends Fragment {
     private static GoogleMap gMap;
-    TextView tvLat, tvlong;
-    FusedLocationProviderClient client;
-    Location currentLocation;
-    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
-    private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
-    private boolean locationPermission = false;
-    private FusedLocationProviderClient locationProviderClient;
-    private static final int REQUEST_CODE = 101;
     public static Marker marker ;
-    SearchView searchView;
-    private AppBarConfiguration mAppBarConfiguration;
-    GoogleMap map;
-    SupportMapFragment mapFragment;
-    Button centreButton;
-    LocationManager locationManager;
-    FusedLocationProviderClient fusedLocationProviderClient;
-
+    ArrayList<Marker> houses = new ArrayList<Marker>();
+    ArrayList<Apartment> apartments = new ArrayList<Apartment>();
+    Apartment razaTower = new Apartment("Raja Tower", "Z. S. Raja", 6, 3, 3, "2441139", 4, 5, 6);
+    Apartment jahedVilla = new Apartment("Jahed Villa", "Jahed Ahmed", 5, 2, 2, "0199999", 2, 4, 5);
+    Apartment dubaiTower = new Apartment("Dubai Tower", "Haroon Miah", 5, 3, 2, "0177777", 1, 3, 7);
     private final OnMapReadyCallback callback = new OnMapReadyCallback() {
         /**
          * Manipulates the map once available.
@@ -77,18 +74,68 @@ public class gmap extends Fragment {
         @Override
         public void onMapReady(GoogleMap googleMap) {
             Log.d("JAMIL", "Gmap - > onMapReady");
+            apartments.add(razaTower);
+            apartments.add(jahedVilla);
+            apartments.add(dubaiTower);
             gMap = googleMap;
             gMap.getUiSettings().setZoomControlsEnabled(true);
-            LatLng sylhet = new LatLng(24.8924503, 91.884156);
+            LatLng sylhet = new LatLng(24.9178183, 91.8309513);
             LatLng userLocation = new LatLng(global_variables.xco, global_variables.yco);
             Log.d(userLocation.latitude + ":JAMIL: ", userLocation.longitude + "");
-            marker = gMap.addMarker(new MarkerOptions().position(sylhet).title("You are here!!"));
+            marker = gMap.addMarker(new MarkerOptions().position(sylhet).title("You are here!!").snippet("0"));
 
             //marker.setPosition(sylhet);
             //googleMap.moveCamera(CameraUpdateFactory.newLatLng(sylhet));
 
-            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sylhet, 15), 5000, null);
+            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sylhet, 17), 5000, null);
 
+
+            if(gMap!=null){
+                gMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+                    @Override
+                    public View getInfoWindow(@NonNull  Marker marker) {
+                        return null;
+                    }
+
+                    @Override
+                    public View getInfoContents(@NonNull Marker marker) {
+                        View v = getLayoutInflater().inflate(R.layout.house_details, null);
+                        TextView name = v.findViewById(R.id.name);
+                        TextView owner = v.findViewById(R.id.owner);
+                        TextView total_floors = v.findViewById(R.id.total_floors);
+                        TextView available_floors = v.findViewById(R.id.available_floors);
+                        TextView bedroom = v.findViewById(R.id.bedroom);
+                        TextView bathroom = v.findViewById(R.id.bathroom);
+                        TextView mobile_no = v.findViewById(R.id.mobile_no);
+                        Log.d("JAMIL", marker.getSnippet());
+                        int id = Integer.parseInt(marker.getSnippet());
+                        name.setText(apartments.get(id).name);
+                        owner.setText(apartments.get(id).owner);
+                        total_floors.setText(String.valueOf(apartments.get(id).totalFloors));
+                        String floors="";
+                        for(int i=0; i<apartments.get(id).availableFloors.size(); i++) {
+                            if(i != 0) floors = floors + ", ";
+                            floors = floors + apartments.get(id).availableFloors.get(i);
+                        }
+                        available_floors.setText(floors);
+                        bedroom.setText(String.valueOf(apartments.get(id).bedrooms));
+                        bathroom.setText(String.valueOf(apartments.get(id).bathrooms));
+                        mobile_no.setText(apartments.get(id).contactInfo);
+                        return v;
+                    }
+                });
+            }
+
+
+            houses.add(gMap.addMarker(new MarkerOptions().position(new LatLng(24.892496, 91.884184))
+                    .icon(bitmapDescriptor(getActivity().getApplicationContext(), R.drawable.ic_apartment))
+                    .snippet("0")));
+            houses.add(gMap.addMarker(new MarkerOptions().position(new LatLng(24.892376, 91.883834))
+                    .icon(bitmapDescriptor(getActivity().getApplicationContext(), R.drawable.ic_apartment))
+                    .snippet("1")));
+            houses.add(gMap.addMarker(new MarkerOptions().position(new LatLng(24.892523, 91.883842))
+                    .icon(bitmapDescriptor(getActivity().getApplicationContext(), R.drawable.ic_apartment))
+                    .snippet("2")));
 
 
 
@@ -106,23 +153,25 @@ public class gmap extends Fragment {
         marker.setPosition(location);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    BitmapDescriptor bitmapDescriptor(Context context, int vectorResId){
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(),
+                vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
+                vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+
+    }
+
         @Nullable
         public View onCreateView(@NonNull LayoutInflater inflater,
                                  @Nullable ViewGroup container,
                                  @Nullable Bundle savedInstanceState) {
             Log.d("JAMIL", "Gmap -> onCreateView");
-
-
-
-
-
-
-
             View view = inflater.inflate(R.layout.fragment_gmap, container, false);
-
-
-
-
             return view;
         }
 

@@ -176,6 +176,7 @@ public class map_container extends Fragment {
                         e.printStackTrace();
                     }
                     Log.d("JAMIL", "getting address");
+                    Log.d("JAMIL", String.valueOf(addressList.size()));
                     if (addressList.size() == 0) {
                         Log.d("JAMIL", "no result found");
                         return false;
