@@ -8,9 +8,11 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -32,6 +34,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -56,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     Button centreButton;
     LocationManager locationManager;
     FusedLocationProviderClient fusedLocationProviderClient;
+    String currentFragment ="map";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
         centreButton = findViewById(R.id.centreButton);
         searchView = findViewById(R.id.search_view);
-        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.gmap);
+        //mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.gmap);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {

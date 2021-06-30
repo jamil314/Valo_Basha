@@ -1,14 +1,18 @@
 package com.example.valo_basha;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -19,6 +23,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -26,9 +32,22 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,6 +58,8 @@ public class map_container extends Fragment {
 
     Button centreButton;
     FusedLocationProviderClient client;
+
+    SearchView searchView;
 
 
 
@@ -113,6 +134,72 @@ public class map_container extends Fragment {
             });
 
 
+
+
+
+       /*     searchView = view.findViewById(R.id.search_view);
+        Places.initialize(getActivity(), "AIzaSyDXBv_MRdJayyAwvnPMPFs4-oNP7Y_sxHA ");
+
+
+        searchView.setFocusable(false);
+        searchView.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS
+                ,Place.Field.LAT_LNG, Place.Field.NAME);
+                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY
+                        , fieldList).build(getActivity());
+                startActivityForResult(intent, 100);
+                Log.d("JAMIL", "so far so good");
+
+            }
+        });*/
+
+
+
+
+
+
+            Log.d("JAMIL", "Center button ok");
+        searchView = view.findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                Log.d("JAMIL", "search box clicked");
+                String qlocation = searchView.getQuery().toString();
+                Log.d("JAMIL", "Searched location: " + qlocation);
+                List<Address> addressList = null;
+                if (qlocation != null || !qlocation.equals("")) {
+                    Geocoder geocoder = new Geocoder(getActivity());
+                    try {
+                        addressList = geocoder.getFromLocationName(qlocation, 1);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("JAMIL", "getting address");
+                    if (addressList.size() == 0) {
+                        Log.d("JAMIL", "no result found");
+                        return false;
+                    }
+                    Address address = addressList.get(0);
+                    Log.d("JAMIL", address.getLatitude() + " " + address.getLongitude());
+                    LatLng qpos = new LatLng(address.getLatitude(), address.getLongitude());
+                    gmap.moveTo(qpos, (float) 10.0);
+                    gmap.moveMarker(qpos);
+                } else {
+                    Log.d("JAMIL", "location null");
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+
+
+
+
         return view;
 
 
@@ -120,6 +207,20 @@ public class map_container extends Fragment {
 
     }
 
+
+   /* @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        Log.d("JAMIL", "Here");
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 100 && resultCode == RESULT_OK){
+            Place place = Autocomplete.getPlaceFromIntent(data);
+            searchView.setText(place.getAddress());
+            Log.d("JAMIL", "LOCATION: " + String.valueOf(place.getLatLng()));
+
+        }else if(resultCode == AutocompleteActivity.RESULT_ERROR){
+            Log.d("JAMIL", "AutocompleteActivity.RESULT_ERROR");
+        }
+    }*/
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull  int[] grantResults) {
@@ -132,6 +233,7 @@ public class map_container extends Fragment {
         }
     }
 
+    @SuppressLint("MissingPermission")
     private void getLocation(){
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
