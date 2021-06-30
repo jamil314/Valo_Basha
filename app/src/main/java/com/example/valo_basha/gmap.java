@@ -121,81 +121,13 @@ public class gmap extends Fragment {
             View view = inflater.inflate(R.layout.fragment_gmap, container, false);
 
 
-            /*centreButton = view.findViewById(R.id.centreButton);
-            client  = LocationServices.getFusedLocationProviderClient(getActivity());
-            centreButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(ContextCompat.checkSelfPermission(getActivity(),
-                            Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED &&
-                            ContextCompat.checkSelfPermission(getActivity(),
-                                    Manifest.permission.ACCESS_COARSE_LOCATION)
-                                    ==PackageManager.PERMISSION_GRANTED){
-                        getLocation();
-                    }else{
-                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION
-                                ,Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
-                    }
 
-                }
-            });
-*/
 
             return view;
         }
 
 
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull  int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == 100 && grantResults.length>0 && grantResults[0] + grantResults[1] == PackageManager.PERMISSION_GRANTED){
-            getLocation();
-        }else{
-            Toast.makeText(getActivity()
-                    ,"PERMISSION DENOED", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void getLocation(){
-        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
-            client.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-                @Override
-                public void onComplete(@NonNull Task<Location> task) {
-                    Location location = task.getResult();
-
-                    if(location != null){
-                        tvLat.setText(String.valueOf(location.getLatitude()));
-                        tvlong.setText(String.valueOf(location.getLongitude()));
-                        Log.d("JAMIL", "YAY!! "+String.valueOf(location.getLatitude())+" : "
-                        +String.valueOf(location.getLongitude()));
-                    } else {
-                        Log.d("JAMIL", "NO LUCK");
-                        LocationRequest locationRequest = new LocationRequest()
-                                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                                .setInterval(10000)
-                                .setFastestInterval(1000)
-                                .setNumUpdates(1);
-                        LocationCallback locationCallback = new LocationCallback() {
-                            @Override
-                            public void onLocationResult(@NonNull LocationResult locationResult) {
-                                //super.onLocationResult(locationResult);
-                                Location location1 = locationResult.getLastLocation();
-                                tvLat.setText(String.valueOf(location1.getLatitude()));
-                                tvlong.setText(String.valueOf(location1.getLongitude()));
-                            }
-                        };
-                        client.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
-                    }
-                }
-            });
-        }else{
-            startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-        }
-    }
 
 
 
