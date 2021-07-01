@@ -22,6 +22,7 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.os.Parcelable;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -58,9 +59,9 @@ public class gmap extends Fragment {
     public static Marker marker ;
     ArrayList<Marker> houses = new ArrayList<Marker>();
     ArrayList<Apartment> apartments = new ArrayList<Apartment>();
-    Apartment razaTower = new Apartment("Raja Tower", "Z. S. Raja", 6, 3, 3, "2441139", 4, 5, 6);
-    Apartment jahedVilla = new Apartment("Jahed Villa", "Jahed Ahmed", 5, 2, 2, "0199999", 2, 4, 5);
-    Apartment dubaiTower = new Apartment("Dubai Tower", "Haroon Miah", 5, 3, 2, "0177777", 1, 3, 7);
+    Apartment razaTower = new Apartment("Raja Tower", "Z. S. Raja", 1200, 15000, false, 6, 3, 3, "2441139", 56);
+    Apartment jahedVilla = new Apartment("Jahed Villa", "Jahed Ahmed", 800, 12000, false,  5, 2, 2, "0199999", 26);
+    Apartment dubaiTower = new Apartment("Dubai Tower", "Haroon Miah", 1000, 25000, true, 5, 3, 2, "0177777", 69);
     private final OnMapReadyCallback callback = new OnMapReadyCallback() {
         /**
          * Manipulates the map once available.
@@ -82,7 +83,7 @@ public class gmap extends Fragment {
             LatLng sylhet = new LatLng(24.9178183, 91.8309513);
             LatLng userLocation = new LatLng(global_variables.xco, global_variables.yco);
             Log.d(userLocation.latitude + ":JAMIL: ", userLocation.longitude + "");
-            marker = gMap.addMarker(new MarkerOptions().position(sylhet).title("You are here!!").snippet("0"));
+            marker = gMap.addMarker(new MarkerOptions().position(sylhet).title("You are here!!").snippet("-1"));
 
             //marker.setPosition(sylhet);
             //googleMap.moveCamera(CameraUpdateFactory.newLatLng(sylhet));
@@ -99,28 +100,38 @@ public class gmap extends Fragment {
 
                     @Override
                     public View getInfoContents(@NonNull Marker marker) {
+                        int id = Integer.parseInt(marker.getSnippet());
+                        if(id==-1){
+                            View v = getLayoutInflater().inflate(R.layout.markertext, null);
+                            return v;
+
+                        }
                         View v = getLayoutInflater().inflate(R.layout.house_details, null);
                         TextView name = v.findViewById(R.id.name);
-                        TextView owner = v.findViewById(R.id.owner);
-                        TextView total_floors = v.findViewById(R.id.total_floors);
-                        TextView available_floors = v.findViewById(R.id.available_floors);
+                        TextView area = v.findViewById(R.id.area);
                         TextView bedroom = v.findViewById(R.id.bedroom);
                         TextView bathroom = v.findViewById(R.id.bathroom);
-                        TextView mobile_no = v.findViewById(R.id.mobile_no);
+                        TextView furniture = v.findViewById(R.id.furniture);
+                        TextView rent = v.findViewById(R.id.rent);
                         Log.d("JAMIL", marker.getSnippet());
-                        int id = Integer.parseInt(marker.getSnippet());
                         name.setText(apartments.get(id).name);
-                        owner.setText(apartments.get(id).owner);
-                        total_floors.setText(String.valueOf(apartments.get(id).totalFloors));
-                        String floors="";
-                        for(int i=0; i<apartments.get(id).availableFloors.size(); i++) {
-                            if(i != 0) floors = floors + ", ";
-                            floors = floors + apartments.get(id).availableFloors.get(i);
-                        }
-                        available_floors.setText(floors);
                         bedroom.setText(String.valueOf(apartments.get(id).bedrooms));
                         bathroom.setText(String.valueOf(apartments.get(id).bathrooms));
-                        mobile_no.setText(apartments.get(id).contactInfo);
+                        area.setText(String.valueOf(apartments.get(id).area));
+                        rent.setText(String.valueOf(apartments.get(id).rent));
+                        if(apartments.get(id).furniture) furniture.setText("With");
+                        else furniture.setText("without");
+                        gMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                            @Override
+                            public void onInfoWindowClick(@NonNull  Marker marker) {
+                                if(marker.getSnippet() == "-1") return;
+                                Log.d("JAMIL", name.getText()+" is clicked");
+                                Intent i = new Intent(getActivity(), InDepthApartmentDetails.class);
+                                i.putExtra("apartment", (Parcelable) apartments.get(id));
+                                Log.d("JAMIL", "passed data successfully");
+                                startActivity(i);
+                            }
+                        });
                         return v;
                     }
                 });
