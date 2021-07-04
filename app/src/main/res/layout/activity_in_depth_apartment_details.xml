@@ -16,6 +16,9 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -33,6 +36,9 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -45,12 +51,33 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp" />
+            <Space
+                android:layout_width="5dp"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/btn_call"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/ic_baseline_call_24" />
+            <Space
+                android:layout_width="5dp"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/btn_copy"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/ic_baseline_content_copy_24" />
         </LinearLayout>
 
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -68,6 +95,9 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -85,6 +115,9 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -109,6 +142,9 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"/>
 
             <TextView
                 android:id="@+id/furniture"
@@ -127,6 +163,9 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -151,6 +190,9 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -169,6 +211,9 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -188,6 +233,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -201,15 +249,21 @@
 
             <Button
                 android:id="@+id/btn_left"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="25dp"
+                android:layout_height="20dp"
                 android:background="@drawable/ic_baseline_arrow_back_24"/>
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"/>
 
             <Button
                 android:id="@+id/btn_right"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="25dp"
+                android:layout_height="20dp"
                 android:background="@drawable/ic_baseline_arrow_forward_24"/>
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"/>
 
         </LinearLayout>
 
@@ -233,7 +287,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
-        android:text="Report"
+        android:text="Report!"
         android:textColor="@color/design_default_color_error"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
