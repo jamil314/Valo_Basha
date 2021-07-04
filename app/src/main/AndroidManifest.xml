@@ -19,7 +19,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Report_activity"></activity>
+        <activity android:name=".NewDetails"></activity>
+        <activity android:name=".LogInWithEmail" />
+        <activity android:name=".OTP" />
+        <activity android:name=".LogIn" />
+        <activity android:name=".Report_activity" />
         <activity android:name=".InDepthApartmentDetails" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

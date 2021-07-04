@@ -20,7 +20,7 @@
                 <item
                     android:id="@+id/nav_login"
                     android:icon="@drawable/logo_login"
-                    android:title="Log in / Sign up" />
+                    android:title="Become a landlord" />
             </group>
         </menu>
     </item>

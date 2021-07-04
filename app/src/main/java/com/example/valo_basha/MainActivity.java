@@ -93,7 +93,12 @@ public class MainActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String s) {
                 Log.d("JAMIL", "search box clicked");
                 String qlocation = searchView.getQuery().toString();
-                Log.d("JAMIL", "Searched location: " + qlocation);
+                Log.d("JAMIL", "Searched location: /" + qlocation+"/");
+                if(qlocation.equals("jamil")){
+                    LatLng qpos = new LatLng(24.892456, 91.884148);
+                    gmap.moveTo(qpos, (float) 19.0);
+                    return false;
+                }
                 List<Address> addressList = null;
                 if (qlocation != null || !qlocation.equals("")) {
                     Geocoder geocoder = new Geocoder(MainActivity.this);

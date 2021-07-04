@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,7 @@ public class InDepthApartmentDetails extends AppCompatActivity {
     int i=0, n=7;
     Button report, right, left, copy, call;
     ImageView imageView;
+    LinearLayout imagelist;
     int images[] = new int[7];
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,23 +51,23 @@ public class InDepthApartmentDetails extends AppCompatActivity {
         bathroom.setText(String.valueOf(apartment.bathrooms));
         area.setText(String.valueOf(apartment.area));
         rent.setText(String.valueOf(apartment.rent));
-        if(apartment.furniture) furniture.setText("With");
+        if (apartment.furniture) furniture.setText("With");
         else furniture.setText("without");
         TextView total_floors = findViewById(R.id.total_floors);
         TextView available_floors = findViewById(R.id.available_floors);
         TextView mobile_no = findViewById(R.id.mobile_no);
         owner.setText(apartment.owner);
         total_floors.setText(String.valueOf(apartment.totalFloors));
-        String floors="";
+        String floors = "";
         long t = apartment.mask;
-        int f=0, c=1;
-        while(t>0){
-            if(t%2 == 1) {
-                if(f!=0) floors = floors + ", ";
+        int f = 0, c = 1;
+        while (t > 0) {
+            if (t % 2 == 1) {
+                if (f != 0) floors = floors + ", ";
                 f++;
                 floors = floors + String.valueOf(c);
             }
-            t = t/2;
+            t = t / 2;
             c++;
         }
         available_floors.setText(floors);
@@ -78,13 +80,20 @@ public class InDepthApartmentDetails extends AppCompatActivity {
         copy = findViewById(R.id.btn_copy);
         call = findViewById(R.id.btn_call);
         imageView = findViewById(R.id.image_view);
-        images[0]= R.drawable.apartment_entrance;
-        images[1]= R.drawable.apartment_with_furniture;
-        images[2]= R.drawable.apartment_with_furniture_2;
-        images[3]= R.drawable.apartment_with_furniture_3;
-        images[4]= R.drawable.apartment_empty;
-        images[5]= R.drawable.apartment_empty_2;
-        images[6]= R.drawable.apartment_view;
+        images[0] = R.drawable.apartment_entrance;
+        images[1] = R.drawable.apartment_with_furniture;
+        images[2] = R.drawable.apartment_with_furniture_2;
+        images[3] = R.drawable.apartment_with_furniture_3;
+        images[4] = R.drawable.apartment_empty;
+        images[5] = R.drawable.apartment_empty_2;
+        images[6] = R.drawable.apartment_view;
+        /*imagelist = findViewById(R.id.image_container);
+        for(int i=0; i<7; i++){
+            View image = getLayoutInflater().inflate(R.layout.image, null, false);
+            imageView = (ImageView) image.findViewById(R.id.image_view);
+            imageView.setImageResource(images[i]);
+            imagelist.addView(image);
+        }*/
         right.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
