@@ -7,7 +7,11 @@ import androidx.viewpager2.widget.MarginPageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -15,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.smarteist.autoimageslider.SliderView;
 
@@ -23,7 +28,7 @@ import java.util.List;
 
 public class InDepthApartmentDetails extends AppCompatActivity {
     int i=0, n=7;
-    Button report, right, left;
+    Button report, right, left, copy, call;
     ImageView imageView;
     int images[] = new int[7];
     @Override
@@ -70,6 +75,8 @@ public class InDepthApartmentDetails extends AppCompatActivity {
         report = findViewById(R.id.btn_report);
         right = findViewById(R.id.btn_right);
         left = findViewById(R.id.btn_left);
+        copy = findViewById(R.id.btn_copy);
+        call = findViewById(R.id.btn_call);
         imageView = findViewById(R.id.image_view);
         images[0]= R.drawable.apartment_entrance;
         images[1]= R.drawable.apartment_with_furniture;
@@ -101,6 +108,27 @@ public class InDepthApartmentDetails extends AppCompatActivity {
                 startActivity(ri);
             }
         });
-
+        copy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("number", mobile_no.getText().toString());
+                clipboardManager.setPrimaryClip(clip);
+                Toast toast = Toast.makeText(getApplicationContext(), "Copied", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
+        call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String s ="tel:"+apartment.contactInfo;
+                Log.d("JAMIL", s);
+                Toast toast = Toast.makeText(getApplicationContext(), "Calling "+apartment.owner , Toast.LENGTH_SHORT);
+                toast.show();
+                Intent intent1 = new Intent(Intent.ACTION_DIAL);
+                intent1.setData(Uri.parse(s));
+                startActivity(intent1);
+            }
+        });
     }
 }
