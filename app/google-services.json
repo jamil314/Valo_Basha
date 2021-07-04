@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "695792348583",
+    "project_id": "maaaaap",
+    "storage_bucket": "maaaaap.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:695792348583:android:706e8376da097b143d9a82",
+        "android_client_info": {
+          "package_name": "com.example.valo_basha"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "695792348583-fmhgck0dtud26f5ns75k7pshbve952im.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXBv_MRdJayyAwvnPMPFs4-oNP7Y_sxHA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "695792348583-fmhgck0dtud26f5ns75k7pshbve952im.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
