@@ -188,10 +188,68 @@
             </LinearLayout>
 
         </HorizontalScrollView>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="  Add Pictures for better judgement:"/>
+            android:text="  Add pictures for better judgement:"
+            android:textSize="20sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Space
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"/>
+            <Button
+                android:id="@+id/pic_from_gallery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select from gallery"/>
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"/>
+            <Button
+                android:id="@+id/pic_from_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Take new picture"/>
+
+        </LinearLayout>
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="300dp">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/image_container">
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Space
+            android:layout_width="10dp"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/btn_discard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="discard"/>
+        <Space
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btn_proceed_to_place"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="proceed" />
+    </LinearLayout>
 
     </LinearLayout>
 
