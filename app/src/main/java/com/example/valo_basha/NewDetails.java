@@ -1,14 +1,17 @@
 package com.example.valo_basha;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -19,7 +22,9 @@ public class NewDetails extends AppCompatActivity {
     TextView bed, bath;
     EditText t_floors;
     LinearLayout layoutlist;
-    Button add;
+    Button add, gallery, camera;
+    ImageView imageView;
+    LinearLayout imagelist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +37,9 @@ public class NewDetails extends AppCompatActivity {
         bath = findViewById(R.id.bathroom_count);
         layoutlist = findViewById(R.id.layout);
         add = findViewById(R.id.add_floors);
+        gallery = findViewById(R.id.pic_from_gallery);
+        camera = findViewById(R.id.pic_from_camera);
+        imagelist = findViewById(R.id.image_container);
         skbed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -81,6 +89,26 @@ public class NewDetails extends AppCompatActivity {
                 //https://www.youtube.com/watch?v=EJrmgJT2NnI
             }
         });
+        gallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "select picture"), 1);
+            }
+        });
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1){
+            Log.d("JAMIL", "Picture selected: "+data);
+            View image = getLayoutInflater().inflate(R.layout.image, null, false);
+            imageView = (ImageView) image.findViewById(R.id.image_view);
+            imageView.setImageURI(data.getData());
+            imagelist.addView(image);
+        }
     }
 }
