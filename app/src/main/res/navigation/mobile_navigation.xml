@@ -10,9 +10,13 @@
         android:name="com.example.valo_basha.map_container"
         android:label="Map"
         tools:layout="@layout/fragment_map_container" />
-
     <fragment
         android:id="@+id/nav_login"
+        android:name="com.example.valo_basha.fragment_login"
+        android:label="Login / Sign up"
+        tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/nav_share"
         android:name="com.example.valo_basha.fragment_landlord"
         android:label="Become a landlord"
         tools:layout="@layout/fragment_landlord" />
