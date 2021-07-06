@@ -71,9 +71,9 @@ public class fragment_landlord extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_landlord, container, false);
-        building_name = view.findViewById(R.id.building_name);
-        name = view.findViewById(R.id.name);
-        phn_no = view.findViewById(R.id.phone_no);
+        building_name = (EditText) view.findViewById(R.id.building_name);
+        name = (EditText) view.findViewById(R.id.name);
+        phn_no = (EditText) view.findViewById(R.id.phn_no);
         otp = view.findViewById(R.id.otp);
         msg = view.findViewById(R.id.msg);
         proceed = view.findViewById(R.id.btn_proceed);
@@ -90,10 +90,14 @@ public class fragment_landlord extends Fragment {
             @Override
             public void onClick(View view) {
                 //msg.setVisibility(View.VISIBLE);
+                Apartment apartment = new Apartment();
+                apartment.name = building_name.getText().toString();
+                apartment.owner = name.getText().toString();
+                apartment.contactInfo = phn_no.getText().toString();
                 Intent intent = new Intent(getActivity(), NewDetails.class);
-                //intent.putExtra("name", building_name.getText().toString());
-                //intent.putExtra("owner", name.getText().toString());
-                //intent.putExtra("phn", phn_no.getText().toString());
+                Log.d("JAMIL", "created intent");
+                intent.putExtra("apartment", (Parcelable) apartment);
+                Log.d("JAMIL", "sent value to intent");
                 startActivity(intent);
             }
         });
