@@ -46,6 +46,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -83,96 +84,6 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-
-
-        centreButton = findViewById(R.id.centreButton);
-        searchView = findViewById(R.id.search_view);
-        //mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.gmap);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                Log.d("JAMIL", "search box clicked");
-                String qlocation = searchView.getQuery().toString();
-                Log.d("JAMIL", "Searched location: /" + qlocation+"/");
-                if(qlocation.equals("jamil")){
-                    LatLng qpos = new LatLng(24.892456, 91.884148);
-                    gmap.moveTo(qpos, (float) 19.0);
-                    return false;
-                }
-                List<Address> addressList = null;
-                if (qlocation != null || !qlocation.equals("")) {
-                    Geocoder geocoder = new Geocoder(MainActivity.this);
-                    try {
-                        addressList = geocoder.getFromLocationName(qlocation, 1);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    Log.d("JAMIL", "getting address");
-                    if (addressList.size() == 0) {
-                        Log.d("JAMIL", "no result found");
-                        return false;
-                    }
-                    Address address = addressList.get(0);
-                    Log.d("JAMIL", address.getLatitude() + " " + address.getLongitude());
-                    LatLng qpos = new LatLng(address.getLatitude(), address.getLongitude());
-                    gmap.moveTo(qpos, (float) 10.0);
-                    gmap.moveMarker(qpos);
-                } else {
-                    Log.d("JAMIL", "location null");
-                }
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                return false;
-            }
-        });
-
-        centreButton = (Button) findViewById(R.id.centreButton);
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{
-                    Manifest.permission.ACCESS_FINE_LOCATION
-            }, 100);
-        }
-        centreButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    Log.d("JAMIL", "Permission granted");
-                    getLocation();
-                } else {
-                    Log.d("JAMIL", "Permission denied");
-                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
-                }
-            }
-        });
-
-
-    }
-
-    private void getLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{
-                    Manifest.permission.ACCESS_FINE_LOCATION
-            }, 100);
-            return;
-        }
-        fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-            @Override
-            public void onComplete(@NonNull Task<Location> task) {
-                Location location = task.getResult();
-                if (location != null) {
-                    LatLng qpos = new LatLng(location.getLatitude(), location.getLongitude());
-                    gmap.moveTo(qpos, (float) 15.0);
-                    gmap.moveMarker(qpos);
-                    Log.d("JAMIL", location.getLatitude() + " " + location.getLongitude());
-                } else Log.d("JAMIL", "getlocation failed");
-            }
-        });
-
     }
 
     @Override
@@ -189,19 +100,5 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
-    }
-
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case REQUEST_CODE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    getLocation();
-                }
-                break;
-        }
     }
 }
