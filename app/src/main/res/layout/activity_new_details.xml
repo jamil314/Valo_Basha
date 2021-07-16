@@ -1,26 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/green_gradient"
     tools:context=".NewDetails">
 
     <LinearLayout
+        android:id="@+id/linearLayout4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <Space
                 android:layout_width="10dp"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Building's name: "
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Home sweet home"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Bedrooms: "
                 android:textSize="20sp" />
+
             <TextView
                 android:id="@+id/bedroom_count"
                 android:layout_width="30dp"
@@ -33,8 +63,8 @@
                 style="@style/Widget.AppCompat.SeekBar.Discrete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:max="10"
                 android:layout_gravity="center"
+                android:max="10"
                 android:progress="3" />
 
         </LinearLayout>
@@ -42,15 +72,17 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <Space
                 android:layout_width="10dp"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Bathrooms: "
                 android:textSize="20sp" />
+
             <TextView
                 android:id="@+id/bathroom_count"
                 android:layout_width="20dp"
@@ -63,8 +95,8 @@
                 style="@style/Widget.AppCompat.SeekBar.Discrete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:max="10"
                 android:layout_gravity="center"
+                android:max="10"
                 android:progress="3" />
 
         </LinearLayout>
@@ -73,35 +105,41 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <Space
                 android:layout_width="10dp"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <CheckBox
                 android:id="@+id/furniture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="With furnitures"/>
+                android:text="With furnitures" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <Space
                 android:layout_width="10dp"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Area: "
                 android:textSize="20sp" />
+
             <EditText
                 android:id="@+id/area"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
                 android:hint="1500"
+                android:inputType="numberDecimal"
                 android:textSize="20sp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -112,21 +150,25 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <Space
                 android:layout_width="10dp"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Rent: "
                 android:textSize="20sp" />
+
             <EditText
                 android:id="@+id/rent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
                 android:hint="15000"
+                android:inputType="numberDecimal"
                 android:textSize="20sp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -137,14 +179,17 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <Space
                 android:layout_width="10dp"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Total floors: "
                 android:textSize="20sp" />
+
             <EditText
                 android:id="@+id/t_floors"
                 android:layout_width="wrap_content"
@@ -157,14 +202,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <Space
                 android:layout_width="10dp"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Available floors: "
                 android:textSize="20sp" />
+
             <Button
                 android:id="@+id/add_floors"
                 android:layout_width="20dp"
@@ -177,82 +225,117 @@
         <HorizontalScrollView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+
             <LinearLayout
+                android:id="@+id/layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:id="@+id/layout">
+                android:orientation="horizontal">
+
                 <Space
                     android:layout_width="10dp"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
         </HorizontalScrollView>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="  Add pictures for better judgement:"
-            android:textSize="20sp" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <Space
-                android:layout_width="30dp"
-                android:layout_height="wrap_content"/>
-            <Button
-                android:id="@+id/pic_from_gallery"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Select from gallery"/>
-            <Space
-                android:layout_width="10dp"
-                android:layout_height="wrap_content"/>
-            <Button
-                android:id="@+id/pic_from_camera"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Take new picture"/>
+        <!--  <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="  Add pictures for better judgement:"
+              android:textSize="20sp" />
 
-        </LinearLayout>
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="300dp">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:id="@+id/image_container">
-            </LinearLayout>
+          <Space
+              android:layout_width="match_parent"
+              android:layout_height="10dp" />
 
-        </HorizontalScrollView>
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
+              <Space
+                  android:layout_width="30dp"
+                  android:layout_height="wrap_content"/>
+              <Button
+                  android:id="@+id/pic_from_gallery"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:background="@drawable/custom_button"
+                  android:textAllCaps="false"
+                  android:text=" Select from gallery "/>
 
-     <LinearLayout
+              <Space
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1" />
+
+              <Button
+                  android:id="@+id/pic_from_camera"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:background="@drawable/custom_button"
+                  android:textAllCaps="false"
+                  android:text=" Take new picture "/>
+              <Space
+                  android:layout_width="30dp"
+                  android:layout_height="wrap_content"/>
+
+         </LinearLayout>
+           <HorizontalScrollView
+             android:layout_width="match_parent"
+             android:layout_height="300dp">
+             <LinearLayout
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:orientation="horizontal"
+                 android:id="@+id/image_container">
+             </LinearLayout>
+
+         </HorizontalScrollView> -->
+
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/extra"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <Space
-            android:layout_width="10dp"
-            android:layout_height="wrap_content"/>
-        <Button
-            android:id="@+id/btn_discard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="discard"/>
-        <Space
-            android:layout_width="160dp"
-            android:layout_height="wrap_content"/>
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp"
+        android:hint="Provide additional information (Optional)"
+        android:maxLines="5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
 
-        <Button
-            android:id="@+id/btn_proceed_to_place"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="proceed" />
-    </LinearLayout>
+    <Button
+        android:id="@+id/btn_discard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/custom_button"
+        android:paddingLeft="10dp"
+        android:paddingBottom="10dp"
+        android:text="Discard"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    </LinearLayout>
-
+    <Button
+        android:id="@+id/btn_proceed_to_place"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/custom_button"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
+        android:text="Next"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

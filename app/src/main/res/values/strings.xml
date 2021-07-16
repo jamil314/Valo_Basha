@@ -23,4 +23,9 @@
     <string name="login_failed">"Login failed"</string>
     <string name="open">"open"</string>
     <string name="close">"close"</string>
+    <string name="title_activity_add_picture">ScrollingActivity</string>
+    <string-array name="furniture_spinner">
+        <item>Without furniture</item>
+        <item>With furniture</item>
+    </string-array>
 </resources>

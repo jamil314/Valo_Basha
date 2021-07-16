@@ -83,6 +83,7 @@ public class gmap extends Fragment {
             LatLng sylhet = new LatLng(24.9178183, 91.8309513);
             LatLng userLocation = new LatLng(global_variables.xco, global_variables.yco);
             Log.d(userLocation.latitude + ":JAMIL: ", userLocation.longitude + "");
+            if(global_variables.flag) sylhet = new LatLng(global_variables.user_location.getLatitude(), global_variables.user_location.getLongitude());
             marker = gMap.addMarker(new MarkerOptions().position(sylhet).title("You are here!!").snippet("-1"));
 
             //marker.setPosition(sylhet);
@@ -155,6 +156,7 @@ public class gmap extends Fragment {
 
 
     public static void moveTo(LatLng location, float zoom){
+        Log.d("JAMIL", "moving......");
         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, zoom), 5000, null);
     }
 
@@ -177,28 +179,28 @@ public class gmap extends Fragment {
 
     }
 
-        @Nullable
-        public View onCreateView(@NonNull LayoutInflater inflater,
-                                 @Nullable ViewGroup container,
-                                 @Nullable Bundle savedInstanceState) {
-            Log.d("JAMIL", "Gmap -> onCreateView");
-            View view = inflater.inflate(R.layout.fragment_gmap, container, false);
-            return view;
+    @Nullable
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        Log.d("JAMIL", "Gmap -> onCreateView");
+        View view = inflater.inflate(R.layout.fragment_gmap, container, false);
+        return view;
+    }
+
+
+
+
+
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Log.d("JAMIL", "Gmap -> onViewCreated");
+        super.onViewCreated(view, savedInstanceState);
+        SupportMapFragment mapFragment =
+                (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.gmap);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(callback);
         }
-
-
-
-
-
-
-        @Override
-        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-            Log.d("JAMIL", "Gmap -> onViewCreated");
-            super.onViewCreated(view, savedInstanceState);
-            SupportMapFragment mapFragment =
-                    (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.gmap);
-            if (mapFragment != null) {
-                mapFragment.getMapAsync(callback);
-            }
-        }
+    }
 }

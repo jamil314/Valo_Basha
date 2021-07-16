@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:background="@drawable/custom_button"
     android:orientation="vertical">
     <TextView
         android:layout_width="wrap_content"
@@ -64,6 +65,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/furniture"
             android:textSize="20sp"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -93,6 +95,7 @@
 
     </LinearLayout>
     <TextView
+        android:id="@+id/extra"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Tap to see details"/>

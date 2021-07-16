@@ -1,17 +1,21 @@
 package com.example.valo_basha;
 
+import android.location.Address;
+import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class Apartment implements Parcelable {
-    String name = "Default building", owner= "Default owner", contactInfo = "2441139";
+    String name = "Default building", owner= "Default owner", contactInfo = "2441139", address, extra;
     int totalFloors=7, bedrooms=3, bathrooms=2, rent=15000;
     double area=1780;
     boolean furniture=false;
     long mask=127;
+    Location location;
     Apartment(String name, String owner,double area, int rent, boolean furniture, int totalFloors, int bedrooms, int bathrooms, String contactInfo, long mask){
         this.name = name;
         this.owner = owner;
@@ -30,6 +34,8 @@ public class Apartment implements Parcelable {
         name = in.readString();
         owner = in.readString();
         contactInfo = in.readString();
+        extra = in.readString();
+        address = in.readString();
         totalFloors = in.readInt();
         bedrooms = in.readInt();
         bathrooms = in.readInt();
@@ -61,6 +67,8 @@ public class Apartment implements Parcelable {
         parcel.writeString(name);
         parcel.writeString(owner);
         parcel.writeString(contactInfo);
+        parcel.writeString(extra);
+        parcel.writeString(address);
         parcel.writeInt(totalFloors);
         parcel.writeInt(bedrooms);
         parcel.writeInt(bathrooms);
@@ -148,6 +156,30 @@ public class Apartment implements Parcelable {
 
     public void setMask(long mask) {
         this.mask = mask;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getExtra() {
+        return extra;
+    }
+
+    public void setExtra(String extra) {
+        this.extra = extra;
     }
 
     public static Creator<Apartment> getCREATOR() {

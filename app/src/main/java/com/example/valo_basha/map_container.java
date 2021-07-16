@@ -56,7 +56,7 @@ import static android.app.Activity.RESULT_OK;
  */
 public class map_container extends Fragment {
 
-    Button centreButton;
+    Button centreButton, b_list, b_filter;
     FusedLocationProviderClient client;
 
     SearchView searchView;
@@ -111,36 +111,76 @@ public class map_container extends Fragment {
         Log.d("JAMIL", "map_container -> onCreatView");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map_container, container, false);
+        Log.d("JAMIL", "==========");
 
-
-         centreButton = view.findViewById(R.id.centreButton);
-            client  = LocationServices.getFusedLocationProviderClient(getActivity());
-            centreButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(ContextCompat.checkSelfPermission(getActivity(),
-                            Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED &&
-                            ContextCompat.checkSelfPermission(getActivity(),
-                                    Manifest.permission.ACCESS_COARSE_LOCATION)
-                                    ==PackageManager.PERMISSION_GRANTED){
-                        getLocation();
-                    }else{
-                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION
-                                ,Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
-                    }
-
+        client  = LocationServices.getFusedLocationProviderClient(getActivity());
+        if(ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION)
+                        ==PackageManager.PERMISSION_GRANTED){
+            getLocation();
+        }else{
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION
+                    ,Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
+        }
+        b_filter = view.findViewById(R.id.btn_filter);
+        b_list = view.findViewById(R.id.btn_confirm_list);
+        if(global_variables.BuildingStatus == 3){
+            b_filter.setVisibility(View.INVISIBLE);
+            b_list.setText(" Confirm Location ");
+        } else{
+            b_filter.setVisibility(View.VISIBLE);
+            b_list.setText(" Show List View ");
+        }
+        centreButton = view.findViewById(R.id.centreButton);
+        centreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(ContextCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED &&
+                        ContextCompat.checkSelfPermission(getActivity(),
+                                Manifest.permission.ACCESS_COARSE_LOCATION)
+                                ==PackageManager.PERMISSION_GRANTED){
+                    getLocation();
+                }else{
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION
+                            ,Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
                 }
-            });
+
+            }
+        });
 
 
 
+
+        b_filter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), filter_activity.class);
+                startActivity(intent);
+            }
+        });
+
+
+        b_list.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(global_variables.BuildingStatus == 3){
+
+                } else {
+                    Intent intent2 = new Intent(getActivity(), apartment_list.class);
+                    startActivity(intent2);
+                }
+
+            }
+        });
 
 
        /*     searchView = view.findViewById(R.id.search_view);
         Places.initialize(getActivity(), "AIzaSyDXBv_MRdJayyAwvnPMPFs4-oNP7Y_sxHA ");
-
-
         searchView.setFocusable(false);
         searchView.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
@@ -150,7 +190,6 @@ public class map_container extends Fragment {
                         , fieldList).build(getActivity());
                 startActivityForResult(intent, 100);
                 Log.d("JAMIL", "so far so good");
-
             }
         });*/
 
@@ -159,7 +198,7 @@ public class map_container extends Fragment {
 
 
 
-            Log.d("JAMIL", "Center button ok");
+        Log.d("JAMIL", "Center button ok");
         searchView = view.findViewById(R.id.search_view);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -222,7 +261,6 @@ public class map_container extends Fragment {
             Place place = Autocomplete.getPlaceFromIntent(data);
             searchView.setText(place.getAddress());
             Log.d("JAMIL", "LOCATION: " + String.valueOf(place.getLatLng()));
-
         }else if(resultCode == AutocompleteActivity.RESULT_ERROR){
             Log.d("JAMIL", "AutocompleteActivity.RESULT_ERROR");
         }
@@ -241,6 +279,7 @@ public class map_container extends Fragment {
 
     @SuppressLint("MissingPermission")
     private void getLocation(){
+        Log.d("JAMIL", "getting location");
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
             client.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
@@ -254,6 +293,8 @@ public class map_container extends Fragment {
                         gmap.moveMarker(qpos);
                         Log.d("JAMIL", "YAY!! "+String.valueOf(location.getLatitude())+" : "
                                 +String.valueOf(location.getLongitude()));
+                        global_variables.user_location = location;
+                        global_variables.flag = true;
                     } else {
                         Log.d("JAMIL", "NO LUCK");
                         LocationRequest locationRequest = new LocationRequest()
@@ -266,11 +307,13 @@ public class map_container extends Fragment {
                             public void onLocationResult(@NonNull LocationResult locationResult) {
                                 //super.onLocationResult(locationResult);
                                 Location location1 = locationResult.getLastLocation();
-                                LatLng qpos = new LatLng(location.getLatitude(), location.getLongitude());
+                                LatLng qpos = new LatLng(location1.getLatitude(), location1.getLongitude());
                                 gmap.moveTo(qpos, (float) 15.0);
                                 gmap.moveMarker(qpos);
-                                Log.d("JAMIL", "YAY!! "+String.valueOf(location.getLatitude())+" : "
-                                        +String.valueOf(location.getLongitude()));
+                                Log.d("JAMIL", "YAY!!!!! "+String.valueOf(location1.getLatitude())+" : "
+                                        +String.valueOf(location1.getLongitude()));
+                                global_variables.user_location = location1;
+                                global_variables.flag = true;
                             }
                         };
                         client.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
