@@ -11,8 +11,8 @@ import java.util.List;
 
 public class Apartment implements Parcelable {
     String name = "Default building", owner= "Default owner", contactInfo = "2441139", address, extra;
-    int totalFloors=7, bedrooms=3, bathrooms=2, rent=15000;
-    double area=1780;
+    int totalFloors=7, bedrooms=3, bathrooms=2, rent=15000, id=-1;
+    double area=1780, lat, lon;
     boolean furniture=false;
     long mask=127;
     Location location;
@@ -40,8 +40,11 @@ public class Apartment implements Parcelable {
         bedrooms = in.readInt();
         bathrooms = in.readInt();
         rent = in.readInt();
+        id = in.readInt();
         mask = in.readLong();
         area = in.readDouble();
+        lat = in.readDouble();
+        lon = in.readDouble();
         furniture = in.readByte() != 0;
     }
 
@@ -73,8 +76,11 @@ public class Apartment implements Parcelable {
         parcel.writeInt(bedrooms);
         parcel.writeInt(bathrooms);
         parcel.writeInt(rent);
+        parcel.writeInt(id);
         parcel.writeLong(mask);
         parcel.writeDouble(area);
+        parcel.writeDouble(lat);
+        parcel.writeDouble(lon);
         parcel.writeByte((byte) (furniture ? 1 : 0));
     }
 
@@ -180,6 +186,30 @@ public class Apartment implements Parcelable {
 
     public void setExtra(String extra) {
         this.extra = extra;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLon() {
+        return lon;
+    }
+
+    public void setLon(double lon) {
+        this.lon = lon;
     }
 
     public static Creator<Apartment> getCREATOR() {

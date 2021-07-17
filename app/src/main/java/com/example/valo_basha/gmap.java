@@ -49,19 +49,22 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class gmap extends Fragment {
+    Button btn;
     private static GoogleMap gMap;
     public static Marker marker ;
-    ArrayList<Marker> houses = new ArrayList<Marker>();
-    ArrayList<Apartment> apartments = new ArrayList<Apartment>();
-    Apartment razaTower = new Apartment("Raja Tower", "Z. S. Raja", 1200, 15000, false, 6, 3, 3, "2441139", 56);
-    Apartment jahedVilla = new Apartment("Jahed Villa", "Jahed Ahmed", 800, 12000, false,  5, 2, 2, "0199999", 26);
-    Apartment dubaiTower = new Apartment("Dubai Tower", "Haroon Miah", 1000, 25000, true, 5, 3, 2, "0177777", 69);
+    static ArrayList<Marker> houses = new ArrayList<>();
+    static ArrayList<Apartment> apartments =new ArrayList<>();
     private final OnMapReadyCallback callback = new OnMapReadyCallback() {
         /**
          * Manipulates the map once available.
@@ -75,9 +78,6 @@ public class gmap extends Fragment {
         @Override
         public void onMapReady(GoogleMap googleMap) {
             Log.d("JAMIL", "Gmap - > onMapReady");
-            apartments.add(razaTower);
-            apartments.add(jahedVilla);
-            apartments.add(dubaiTower);
             gMap = googleMap;
             gMap.getUiSettings().setZoomControlsEnabled(true);
             LatLng sylhet = new LatLng(24.9178183, 91.8309513);
@@ -92,68 +92,115 @@ public class gmap extends Fragment {
             gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sylhet, 17), 5000, null);
 
 
-            if(gMap!=null){
-                gMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-                    @Override
-                    public View getInfoWindow(@NonNull  Marker marker) {
-                        return null;
+            DatabaseReference mDatabase;
+            mDatabase = FirebaseDatabase.getInstance("https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                    .getReference().child("ads");
+            mDatabase.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    apartments.clear();
+                    for(DataSnapshot dataSnapshot:snapshot.getChildren()){
+                        Log.d("JAMIL", dataSnapshot.getKey()+": "+String.valueOf(dataSnapshot.child("name").getValue()));
+                        Apartment apartment = dataSnapshot.getValue(Apartment.class);
+                        apartments.add(apartment);
                     }
+                    Log.d("JAMIL", "done");
+                    resetMarkers();
+                }
 
-                    @Override
-                    public View getInfoContents(@NonNull Marker marker) {
-                        int id = Integer.parseInt(marker.getSnippet());
-                        if(id==-1){
-                            View v = getLayoutInflater().inflate(R.layout.markertext, null);
-                            return v;
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-                        }
-                        View v = getLayoutInflater().inflate(R.layout.house_details, null);
-                        TextView name = v.findViewById(R.id.name);
-                        TextView area = v.findViewById(R.id.area);
-                        TextView bedroom = v.findViewById(R.id.bedroom);
-                        TextView bathroom = v.findViewById(R.id.bathroom);
-                        TextView furniture = v.findViewById(R.id.furniture);
-                        TextView rent = v.findViewById(R.id.rent);
-                        Log.d("JAMIL", marker.getSnippet());
-                        name.setText(apartments.get(id).name);
-                        bedroom.setText(String.valueOf(apartments.get(id).bedrooms));
-                        bathroom.setText(String.valueOf(apartments.get(id).bathrooms));
-                        area.setText(String.valueOf(apartments.get(id).area));
-                        rent.setText(String.valueOf(apartments.get(id).rent));
-                        if(apartments.get(id).furniture) furniture.setText("With");
-                        else furniture.setText("without");
-                        gMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                            @Override
-                            public void onInfoWindowClick(@NonNull  Marker marker) {
-                                if(marker.getSnippet() == "-1") return;
-                                Log.d("JAMIL", name.getText()+" is clicked");
-                                Intent i = new Intent(getActivity(), InDepthApartmentDetails.class);
-                                i.putExtra("apartment", (Parcelable) apartments.get(id));
-                                Log.d("JAMIL", "passed data successfully");
-                                startActivity(i);
-                            }
-                        });
-                        return v;
-                    }
-                });
-            }
-
-
-            houses.add(gMap.addMarker(new MarkerOptions().position(new LatLng(24.892496, 91.884184))
-                    .icon(bitmapDescriptor(getActivity().getApplicationContext(), R.drawable.ic_apartment))
-                    .snippet("0")));
-            houses.add(gMap.addMarker(new MarkerOptions().position(new LatLng(24.892376, 91.883834))
-                    .icon(bitmapDescriptor(getActivity().getApplicationContext(), R.drawable.ic_apartment))
-                    .snippet("1")));
-            houses.add(gMap.addMarker(new MarkerOptions().position(new LatLng(24.892523, 91.883842))
-                    .icon(bitmapDescriptor(getActivity().getApplicationContext(), R.drawable.ic_apartment))
-                    .snippet("2")));
-
-
-
+                }
+            });
         }
+
     };
 
+    public void resetMarkers() {
+        if(gMap!=null){
+            gMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+                @Override
+                public View getInfoWindow(@NonNull  Marker marker) {
+                    return null;
+                }
+
+                @Override
+                public View getInfoContents(@NonNull Marker marker) {
+                    int id = Integer.parseInt(marker.getSnippet());
+                    if(id==-1){
+                        View v = getLayoutInflater().inflate(R.layout.markertext, null);
+                        return v;
+
+                    }
+                    View v = getLayoutInflater().inflate(R.layout.house_details, null);
+                    TextView name = v.findViewById(R.id.name);
+                    TextView area = v.findViewById(R.id.area);
+                    TextView bedroom = v.findViewById(R.id.bedroom);
+                    TextView bathroom = v.findViewById(R.id.bathroom);
+                    TextView furniture = v.findViewById(R.id.furniture);
+                    TextView rent = v.findViewById(R.id.rent);
+                    Log.d("JAMIL", marker.getSnippet());
+                    name.setText(apartments.get(id).name);
+                    bedroom.setText(String.valueOf(apartments.get(id).bedrooms));
+                    bathroom.setText(String.valueOf(apartments.get(id).bathrooms));
+                    area.setText(String.valueOf(apartments.get(id).area));
+                    rent.setText(String.valueOf(apartments.get(id).rent));
+                    if(apartments.get(id).furniture) furniture.setText("With");
+                    else furniture.setText("without");
+                    gMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                        @Override
+                        public void onInfoWindowClick(@NonNull  Marker marker) {
+                            if(marker.getSnippet() == "-1") return;
+                            Log.d("JAMIL", name.getText()+" is clicked");
+                            Intent i = new Intent(getActivity(), InDepthApartmentDetails.class);
+                            i.putExtra("apartment", (Parcelable) apartments.get(id));
+                            Log.d("JAMIL", "passed data successfully");
+                            startActivity(i);
+                        }
+                    });
+                    return v;
+                }
+            });
+        }
+        int count = 0;
+        for(Apartment a:apartments){
+            houses.add(gMap.addMarker(new MarkerOptions().position(new LatLng(a.lat, a.lon))
+                    .icon(bitmapDescriptor(getActivity().getApplicationContext(), R.drawable.ic_apartment))
+                    .snippet(count+"")));
+            count++;
+        }
+    }
+
+
+    public static void marker_filter(Filters filter){
+        for(Marker mark: houses) mark.setVisible(true);
+        for(Marker mark: houses){
+            int id = Integer.parseInt(mark.getSnippet());
+            if(id==-1) continue;
+            Apartment check = apartments.get(id);
+
+            if(filter.isFurn){
+                if(filter.furn != check.isFurniture()) mark.setVisible(false);
+            }
+
+            if(filter.isArea){
+                if(filter.maxArea < check.area || filter.minArea > check.area) mark.setVisible(false);
+            }
+
+            if(filter.isBed){
+                if(filter.maxBed < check.bedrooms || filter.minBed > check.bedrooms) mark.setVisible(false);
+            }
+
+            if(filter.isBath){
+                if(filter.maxBath < check.bathrooms || filter.minBath > check.bathrooms) mark.setVisible(false);
+            }
+
+            if(filter.isRent){
+                if(filter.maxRent < check.rent || filter.minRent > check.rent) mark.setVisible(false);
+            }
+        }
+    }
 
     public static void moveTo(LatLng location, float zoom){
         Log.d("JAMIL", "moving......");

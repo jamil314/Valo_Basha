@@ -84,10 +84,6 @@ public class AddPicture extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 global_variables.BuildingStatus = 3;
-                /*map_container container = new map_container();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.layout.activity_add_picture, container);
-                transaction.commit();*/
                 Intent intent1 = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent1);
 
@@ -107,6 +103,13 @@ public class AddPicture extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         int id = Integer.parseInt(task.getResult().getValue().toString());
+                        apartment.id = id;
+                        apartment.lat = global_variables.user_location.getLatitude();
+                        apartment.lon = global_variables.user_location.getLongitude();
+
+
+
+
                         Log.d("JAMIL", "id: "+id);
                         mDatabase.child("mandatory_info").child("id").setValue(id+1);
                         mDatabase.child("mandatory_info").child("owner->id").child(apartment.owner).push().setValue(id);
