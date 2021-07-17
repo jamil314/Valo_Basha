@@ -162,7 +162,7 @@ public class NewDetails extends AppCompatActivity {
             isValid = false;
             rent.setError("Rent can not be empty");
         } else {
-            if (Integer.parseInt(rent.getText().toString()) > 9999999) {
+            if (Integer.parseInt(rent.getText().toString()) > 10000000) {
                 isValid = false;
                 rent.setError("Be realistic");
             }
