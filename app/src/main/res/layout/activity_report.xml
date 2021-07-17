@@ -4,50 +4,97 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/green_gradient"
     tools:context=".Report_activity">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textAllCaps="false"
+                android:text=" Your namme: "/>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textAllCaps="false"
+                android:id="@+id/reporter_name"
+                android:hint="Please state your name"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textAllCaps="false"
+                android:text=" Contact info: "/>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textAllCaps="false"
+                android:id="@+id/reporter_contact"
+                android:hint="So that we can get back to you"/>
+        </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Setect appilable options"
+            android:text=" Setect applicable options"
             android:textSize="20dp"/>
         <CheckBox
+            android:id="@+id/cb1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Vulger/abusive name"
             android:textSize="20dp"/>
         <CheckBox
+            android:id="@+id/cb2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Vulger/abusive picture"
             android:textSize="20dp"/>
         <CheckBox
+            android:id="@+id/cb3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Demanding more rent than mantioned"
+            android:text="Demanding more rent than mentioned"
             android:textSize="20dp"/>
         <CheckBox
+            android:id="@+id/cb4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Fake data"
             android:textSize="20dp"/>
         <CheckBox
+            android:id="@+id/cb5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Apartment not available"
             android:textSize="20dp"/>
         <EditText
+            android:id="@+id/report_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:maxLines="4"
             android:hint="Something else? describe here"
             android:textSize="20dp"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_gravity="right"
+            android:background="@drawable/custom_button"
             android:text="Submit"
             android:textSize="20dp"
             android:id="@+id/submit"/>

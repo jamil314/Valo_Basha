@@ -1,6 +1,7 @@
 package com.example.valo_basha;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.MarginPageTransformer;
@@ -15,12 +16,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.smarteist.autoimageslider.SliderView;
 
@@ -32,25 +37,44 @@ public class InDepthApartmentDetails extends AppCompatActivity {
     Button report, right, left, copy, call;
     ImageView imageView;
     LinearLayout imagelist;
+    Apartment apartment;
     int images[] = new int[7];
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.custom_manu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Log.d("JAMIL", apartment.name);
+        Intent ri = new Intent(getApplicationContext(), Report_activity.class);
+        ri.putExtra("id", apartment.id);
+        startActivity(ri);
+        return true;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_in_depth_apartment_details);
         Intent intent = getIntent();
-        Apartment apartment = intent.getParcelableExtra("apartment");
+        apartment = intent.getParcelableExtra("apartment");
         getSupportActionBar().setTitle(apartment.name);
-        getSupportActionBar().setHomeButtonEnabled(true);
         TextView owner = findViewById(R.id.owner);
         TextView area = findViewById(R.id.area);
         TextView bedroom = findViewById(R.id.bedroom);
         TextView bathroom = findViewById(R.id.bathroom);
         TextView furniture = findViewById(R.id.furniture);
         TextView rent = findViewById(R.id.rent);
+        TextView extra = findViewById(R.id.extra_info);
         bedroom.setText(String.valueOf(apartment.bedrooms));
         bathroom.setText(String.valueOf(apartment.bathrooms));
         area.setText(String.valueOf(apartment.area));
         rent.setText(String.valueOf(apartment.rent));
+        extra.setText(apartment.extra);
         if (apartment.furniture) furniture.setText("With");
         else furniture.setText("without");
         TextView total_floors = findViewById(R.id.total_floors);
@@ -74,7 +98,7 @@ public class InDepthApartmentDetails extends AppCompatActivity {
         mobile_no.setText(apartment.contactInfo);
 
 
-        report = findViewById(R.id.btn_report);
+        //report = custom_toolbar.findViewById(R.id.btn_report);
         right = findViewById(R.id.btn_right);
         left = findViewById(R.id.btn_left);
         copy = findViewById(R.id.btn_copy);
@@ -110,13 +134,13 @@ public class InDepthApartmentDetails extends AppCompatActivity {
                 Log.d("JAMIL", "i--");
             }
         });
-        report.setOnClickListener(new View.OnClickListener() {
+       /* report.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent ri = new Intent(getApplicationContext(), Report_activity.class);
                 startActivity(ri);
             }
-        });
+        });*/
         copy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -140,4 +164,5 @@ public class InDepthApartmentDetails extends AppCompatActivity {
             }
         });
     }
+
 }
