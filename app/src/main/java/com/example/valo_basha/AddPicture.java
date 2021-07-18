@@ -115,6 +115,7 @@ public class AddPicture extends AppCompatActivity {
                 Log.d("JAMIL", String.valueOf(mDatabaseAdd));
                 int id = global_variables.id;
                 apartment.id = id;
+                uploadImage();
                 apartment.lat = global_variables.buildingX;
                 apartment.lon = global_variables.buildingY;
                 Log.d("JAMIL_Location", apartment.lat+" "+apartment.lon);
