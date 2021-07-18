@@ -85,7 +85,30 @@ public class gmap extends Fragment {
             Log.d(userLocation.latitude + ":JAMIL: ", userLocation.longitude + "");
             if(global_variables.flag) sylhet = new LatLng(global_variables.user_location.getLatitude(), global_variables.user_location.getLongitude());
             marker = gMap.addMarker(new MarkerOptions().position(sylhet).title("You are here!!").snippet("-1"));
+            if(global_variables.BuildingStatus == 3) {
+                marker.setDraggable(true);
+                googleMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+                    @Override
+                    public void onMarkerDragStart(@NonNull Marker marker) {
+                        Log.d("JAMIL", "marker drag started");
+                    }
 
+                    @Override
+                    public void onMarkerDrag(@NonNull Marker marker) {
+                        Log.d("JAMIL", "marker dragging...");
+
+                    }
+
+                    @Override
+                    public void onMarkerDragEnd(@NonNull Marker marker) {
+                        Log.d("JAMIL", "marker drag finished");
+                        global_variables.buildingX = marker.getPosition().latitude;
+                        global_variables.buildingY = marker.getPosition().longitude;
+                        //global_variables.building_addressline = marker.getPosition().
+                        Log.d("JAMIL", "marker drag finished: "+global_variables.buildingX+" "+global_variables.buildingY);
+                    }
+                });
+            } else marker.setDraggable(false);
             //marker.setPosition(sylhet);
             //googleMap.moveCamera(CameraUpdateFactory.newLatLng(sylhet));
 
@@ -113,7 +136,9 @@ public class gmap extends Fragment {
 
                 }
             });
+
         }
+
 
     };
 
@@ -155,6 +180,7 @@ public class gmap extends Fragment {
                             Log.d("JAMIL", name.getText()+" is clicked");
                             Intent i = new Intent(getActivity(), InDepthApartmentDetails.class);
                             i.putExtra("apartment", (Parcelable) apartments.get(id));
+                            i.putExtra("key", "tenent");
                             Log.d("JAMIL", "passed data successfully");
                             startActivity(i);
                         }
@@ -171,7 +197,6 @@ public class gmap extends Fragment {
             count++;
         }
     }
-
 
     public static void marker_filter(Filters filter){
         for(Marker mark: houses) mark.setVisible(true);
@@ -250,4 +275,6 @@ public class gmap extends Fragment {
             mapFragment.getMapAsync(callback);
         }
     }
+
+
 }

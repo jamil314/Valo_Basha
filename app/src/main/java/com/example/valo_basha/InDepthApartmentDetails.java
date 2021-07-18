@@ -27,6 +27,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.smarteist.autoimageslider.SliderView;
 
 import java.util.ArrayList;
@@ -39,21 +44,55 @@ public class InDepthApartmentDetails extends AppCompatActivity {
     LinearLayout imagelist;
     Apartment apartment;
     int images[] = new int[7];
+    String key;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.custom_manu, menu);
+        if(!key.equals("tenent")) menu.getItem(0).setTitle("Delete");
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Log.d("JAMIL", apartment.name);
-        Intent ri = new Intent(getApplicationContext(), Report_activity.class);
-        ri.putExtra("id", apartment.id);
-        startActivity(ri);
+        if(key.equals("tenent")) {
+            Log.d("JAMIL", apartment.name);
+            Intent ri = new Intent(getApplicationContext(), Report_activity.class);
+            ri.putExtra("id", apartment.id);
+            startActivity(ri);
+        } else {
+            Log.d("JAMIL", "delete "+apartment.name);
+            delete();
+
+        }
         return true;
+    }
+
+    private void delete() {
+        Toast toast = Toast.makeText(getApplicationContext(), "Deleted Successfully", Toast.LENGTH_LONG);
+        toast.show();
+        DatabaseReference mDatabase;
+        mDatabase = FirebaseDatabase.getInstance("https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app/").
+                getReference();
+
+        mDatabase.child("ads").child(String.valueOf(apartment.id)).removeValue();
+        mDatabase.child("mandatory_info").child("owner->id").child(apartment.owner)
+                .child(String.valueOf(apartment.id)).removeValue();
+
+        mDatabase.child("mandatory_info").child("count").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                int cnt = Integer.parseInt(task.getResult().getValue().toString());
+                mDatabase.child("mandatory_info").child("count").setValue(cnt-1);
+            }
+        });
+        /*try {
+            wait(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
+        finish();
     }
 
     @Override
@@ -62,6 +101,7 @@ public class InDepthApartmentDetails extends AppCompatActivity {
         setContentView(R.layout.activity_in_depth_apartment_details);
         Intent intent = getIntent();
         apartment = intent.getParcelableExtra("apartment");
+        key = intent.getStringExtra("key");
         getSupportActionBar().setTitle(apartment.name);
         TextView owner = findViewById(R.id.owner);
         TextView area = findViewById(R.id.area);
