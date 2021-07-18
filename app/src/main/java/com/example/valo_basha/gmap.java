@@ -65,6 +65,7 @@ public class gmap extends Fragment {
     public static Marker marker ;
     static ArrayList<Marker> houses = new ArrayList<>();
     static ArrayList<Apartment> apartments =new ArrayList<>();
+    static boolean flag = false;
     private final OnMapReadyCallback callback = new OnMapReadyCallback() {
         /**
          * Manipulates the map once available.
@@ -77,6 +78,7 @@ public class gmap extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
+            flag = true;
             Log.d("JAMIL", "Gmap - > onMapReady");
             gMap = googleMap;
             gMap.getUiSettings().setZoomControlsEnabled(true);
@@ -121,14 +123,17 @@ public class gmap extends Fragment {
             mDatabase.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    apartments.clear();
-                    for(DataSnapshot dataSnapshot:snapshot.getChildren()){
-                        Log.d("JAMIL", dataSnapshot.getKey()+": "+String.valueOf(dataSnapshot.child("name").getValue()));
-                        Apartment apartment = dataSnapshot.getValue(Apartment.class);
-                        apartments.add(apartment);
+                    if(flag) {
+                        apartments.clear();
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            Log.d("JAMIL", dataSnapshot.getKey() + ": " + String.valueOf(dataSnapshot.child("name").getValue()));
+                            Apartment apartment = dataSnapshot.getValue(Apartment.class);
+                            apartments.add(apartment);
+                        }
+                        Log.d("JAMIL", "done");
+                        resetMarkers();
+                        flag = false;
                     }
-                    Log.d("JAMIL", "done");
-                    resetMarkers();
                 }
 
                 @Override
@@ -143,6 +148,16 @@ public class gmap extends Fragment {
     };
 
     public void resetMarkers() {
+        int count = 0;
+        houses.clear();
+        Log.d("JAMIL" , "Houses cleared");
+        for(Apartment a:apartments){
+            Log.d("JAMIL", count+" "+a.name);
+            houses.add(gMap.addMarker(new MarkerOptions().position(new LatLng(a.lat, a.lon))
+                    .icon(bitmapDescriptor(getActivity().getApplicationContext(), R.drawable.ic_apartment))
+                    .snippet(count+"")));
+            count++;
+        }
         if(gMap!=null){
             gMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
                 @Override
@@ -188,13 +203,6 @@ public class gmap extends Fragment {
                     return v;
                 }
             });
-        }
-        int count = 0;
-        for(Apartment a:apartments){
-            houses.add(gMap.addMarker(new MarkerOptions().position(new LatLng(a.lat, a.lon))
-                    .icon(bitmapDescriptor(getActivity().getApplicationContext(), R.drawable.ic_apartment))
-                    .snippet(count+"")));
-            count++;
         }
     }
 

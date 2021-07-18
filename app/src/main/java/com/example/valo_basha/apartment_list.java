@@ -75,7 +75,7 @@ public class apartment_list extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     for(DataSnapshot dataSnapshot:snapshot.getChildren()){
                         String id = String.valueOf(dataSnapshot.getValue());
-                        Log.d("JAMIL", id);
+                        Log.d("JAMIL", "Here: "+id);
                         DatabaseReference mDatabase2;
                         mDatabase2 = FirebaseDatabase.getInstance("https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app/")
                                 .getReference().child("ads").child(id);
