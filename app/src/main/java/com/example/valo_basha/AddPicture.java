@@ -12,6 +12,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.os.PatternMatcher;
@@ -31,6 +33,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 public class AddPicture extends AppCompatActivity {
     Button gallery, camera, cont, current, fromMap;
@@ -75,18 +81,18 @@ public class AddPicture extends AppCompatActivity {
         current.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                apartment.location = global_variables.user_location;
-                apartment.address = global_variables.user_addressline;
+                global_variables.buildingX = global_variables.user_location.getLatitude();
+                global_variables.buildingY = global_variables.user_location.getLongitude();
             }
         });
 
         fromMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d("JAMIL", global_variables.BuildingStatus+"");
                 global_variables.BuildingStatus = 3;
                 Intent intent1 = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent1);
-
             }
         });
 
@@ -104,15 +110,18 @@ public class AddPicture extends AppCompatActivity {
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         int id = Integer.parseInt(task.getResult().getValue().toString());
                         apartment.id = id;
-                        apartment.lat = global_variables.user_location.getLatitude();
-                        apartment.lon = global_variables.user_location.getLongitude();
-
+                        apartment.lat = global_variables.buildingX;
+                        apartment.lon = global_variables.buildingY;
+                        Log.d("JAMIL_Location", apartment.lat+" "+apartment.lon);
+                        apartment.address = fetchaddress(apartment.lat, apartment.lon);
+                        Log.d("JAMIL_Address", apartment.address);
 
 
 
                         Log.d("JAMIL", "id: "+id);
                         mDatabase.child("mandatory_info").child("id").setValue(id+1);
-                        mDatabase.child("mandatory_info").child("owner->id").child(apartment.owner).push().setValue(id);
+                        mDatabase.child("mandatory_info").child("owner->id").child(apartment.owner).
+                                child(String.valueOf(id)).setValue(id);
                         mDatabase.child("ads").child(id+"").setValue(apartment);
                     }
                 });
@@ -120,14 +129,39 @@ public class AddPicture extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         int cnt = Integer.parseInt(task.getResult().getValue().toString());
-                        Log.d("JAMIL", "cnt: "+cnt);
                         mDatabase.child("mandatory_info").child("count").setValue(cnt+1);
                         global_variables.BuildingStatus = 2;
-                        finish();
+                        Log.d("JAMIL", "cnt: "+cnt);
                     }
                 });
+                try {
+                    wait(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                finish();
             }
         });
+    }
+
+    private String fetchaddress(double lat, double lon) {
+        String adr="";
+        Geocoder geocoder = new Geocoder(AddPicture.this, Locale.getDefault());
+        try{
+            List<Address> addresses = geocoder.getFromLocation(lat, lon, 1);
+            if(addresses!=null){
+                Address address = addresses.get(0);
+                StringBuilder stringBuilder = new StringBuilder("");
+                for(int i=0; i<=address.getMaxAddressLineIndex(); i++){
+                    stringBuilder.append(address.getAddressLine(i)).append("\n");
+                }
+                return stringBuilder.toString();
+            }
+            else return "No address found";
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "No address found";
     }
 
 

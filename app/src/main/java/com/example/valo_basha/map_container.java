@@ -177,9 +177,12 @@ public class map_container extends Fragment {
             @Override
             public void onClick(View view) {
                 if(global_variables.BuildingStatus == 3){
+                    global_variables.BuildingStatus = 1;
+                    getActivity().onBackPressed();
 
                 } else {
                     Intent intent2 = new Intent(getActivity(), apartment_list.class);
+                    intent2.putExtra("key", "tenent");
                     startActivity(intent2);
                 }
 

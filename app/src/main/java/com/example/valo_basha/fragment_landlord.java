@@ -17,6 +17,8 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.List;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link fragment_landlord#newInstance} factory method to
@@ -24,7 +26,7 @@ import com.google.firebase.auth.FirebaseUser;
  */
 public class fragment_landlord extends Fragment {
     private FirebaseAuth fAuth;
-    Button proceed, confirm;
+    Button proceed, confirm, list;
     EditText building_name, name, phn_no, otp;
     TextView msg;
     // TODO: Rename parameter arguments, choose names that match
@@ -78,6 +80,7 @@ public class fragment_landlord extends Fragment {
         msg = view.findViewById(R.id.msg);
         proceed = view.findViewById(R.id.btn_proceed);
         confirm = view.findViewById(R.id.btn_otp);
+        list = view.findViewById(R.id.btn_list);
 
         proceed.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,6 +104,17 @@ public class fragment_landlord extends Fragment {
                 startActivity(intent);
             }
         });
+
+
+        list.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), apartment_list.class);
+                intent.putExtra("key", "Default owner");
+                startActivity(intent);
+            }
+        });
+
 
         return view;
     }
