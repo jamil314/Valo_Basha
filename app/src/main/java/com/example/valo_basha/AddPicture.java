@@ -5,36 +5,42 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import android.Manifest;
-import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.hardware.Camera;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.os.PatternMatcher;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -43,6 +49,9 @@ public class AddPicture extends AppCompatActivity {
     ImageView imageView;
     LinearLayout imagelist;
     Apartment apartment;
+    ProgressDialog dialog;
+    ArrayList<Uri> urilist = new ArrayList<>();
+    String currentPhotoPath;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,8 +82,7 @@ public class AddPicture extends AppCompatActivity {
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, 100);
+                dispatchTakePictureIntent();
             }
         });
 
@@ -102,46 +110,54 @@ public class AddPicture extends AppCompatActivity {
                 Toast toast = Toast.makeText(getApplicationContext(),
                         "New Apartment added successfully", Toast.LENGTH_LONG);
                 toast.show();
-                DatabaseReference mDatabase;
-                mDatabase = FirebaseDatabase.getInstance("https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
-                Log.d("JAMIL", String.valueOf(mDatabase));
-                mDatabase.child("mandatory_info").child("id").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        int id = Integer.parseInt(task.getResult().getValue().toString());
-                        apartment.id = id;
-                        apartment.lat = global_variables.buildingX;
-                        apartment.lon = global_variables.buildingY;
-                        Log.d("JAMIL_Location", apartment.lat+" "+apartment.lon);
-                        apartment.address = fetchaddress(apartment.lat, apartment.lon);
-                        Log.d("JAMIL_Address", apartment.address);
-
-
-
-                        Log.d("JAMIL", "id: "+id);
-                        mDatabase.child("mandatory_info").child("id").setValue(id+1);
-                        mDatabase.child("mandatory_info").child("owner->id").child(apartment.owner).
-                                child(String.valueOf(id)).setValue(id);
-                        mDatabase.child("ads").child(id+"").setValue(apartment);
-                    }
-                });
-                mDatabase.child("mandatory_info").child("count").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        int cnt = Integer.parseInt(task.getResult().getValue().toString());
-                        mDatabase.child("mandatory_info").child("count").setValue(cnt+1);
-                        global_variables.BuildingStatus = 2;
-                        Log.d("JAMIL", "cnt: "+cnt);
-                    }
-                });
-                try {
-                    wait(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                DatabaseReference mDatabaseAdd;
+                mDatabaseAdd = FirebaseDatabase.getInstance("https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
+                Log.d("JAMIL", String.valueOf(mDatabaseAdd));
+                int id = global_variables.id;
+                apartment.id = id;
+                uploadImage();
+                apartment.lat = global_variables.buildingX;
+                apartment.lon = global_variables.buildingY;
+                Log.d("JAMIL_Location", apartment.lat+" "+apartment.lon);
+                apartment.address = fetchaddress(apartment.lat, apartment.lon);
+                Log.d("JAMIL_Address", apartment.address);
+                Log.d("JAMIL", "id: "+id);
+                mDatabaseAdd.child("mandatory_info").child("id").setValue(id+1);
+                mDatabaseAdd.child("mandatory_info").child("owner->id").child(apartment.owner).
+                        child(String.valueOf(id)).setValue(id);
+                mDatabaseAdd.child("ads").child(id+"").setValue(apartment); //called listener in gMap
+                int cnt = global_variables.cnt;
+                mDatabaseAdd.child("mandatory_info").child("count").setValue(cnt+1);
+                global_variables.BuildingStatus = 2;
+                Log.d("JAMIL", "cnt: "+cnt);
+                global_variables.id++;
+                global_variables.cnt++;
                 finish();
             }
         });
+    }
+
+    private void uploadImage() {
+        FirebaseStorage storage =FirebaseStorage.getInstance();
+        Log.d("JAMIL", String.valueOf(storage));
+        int i=0;
+        for(Uri uri:urilist){
+            i++;
+            StorageReference ref = storage.getReference("img/"+apartment.id+"/"+i);
+            ref.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Log.d("JAMIL", "Upload successfull");
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("JAMIL", "Upload not successfull");
+
+                }
+            });
+        }
+
     }
 
     private String fetchaddress(double lat, double lon) {
@@ -176,25 +192,66 @@ public class AddPicture extends AppCompatActivity {
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    urilist.remove(data.getData());
                     imagelist.removeView(image);
                 }
             });
             imagelist.addView(image);
+            urilist.add((Uri) data.getData());
         }
         if(requestCode == 100){
-            Log.d("JAMIL", "Photo captured: "+data);
-            Bitmap captureImage = (Bitmap)data.getExtras().get("data");
+            Log.d("JAMIL", "Photo captured: ");
+            File f = new File(currentPhotoPath);
             View image = getLayoutInflater().inflate(R.layout.new_picture_unit, null, false);
             imageView = (ImageView) image.findViewById(R.id.image);
-            imageView.setImageBitmap(captureImage);
+            imageView.setImageURI(Uri.fromFile(f));
             Button delete = (Button)image.findViewById(R.id.img_dlt);
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     imagelist.removeView(image);
+                    urilist.remove(Uri.fromFile(f));
                 }
             });
             imagelist.addView(image);
+            urilist.add(Uri.fromFile(f));
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.example.valo_basha.android.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, 100);
+            }
         }
     }
 }

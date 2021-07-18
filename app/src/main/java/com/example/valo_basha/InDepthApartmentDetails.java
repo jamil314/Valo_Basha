@@ -80,18 +80,13 @@ public class InDepthApartmentDetails extends AppCompatActivity {
         mDatabase.child("mandatory_info").child("owner->id").child(apartment.owner)
                 .child(String.valueOf(apartment.id)).removeValue();
 
-        mDatabase.child("mandatory_info").child("count").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                int cnt = Integer.parseInt(task.getResult().getValue().toString());
-                mDatabase.child("mandatory_info").child("count").setValue(cnt-1);
-            }
-        });
-        /*try {
-            wait(1000);
+        global_variables.cnt--;
+        mDatabase.child("mandatory_info").child("count").setValue(global_variables.cnt+"");
+        try {
+            wait(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }*/
+        }
         finish();
     }
 
