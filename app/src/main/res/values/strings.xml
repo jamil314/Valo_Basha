@@ -24,6 +24,11 @@
     <string name="open">"open"</string>
     <string name="close">"close"</string>
     <string name="title_activity_add_picture">ScrollingActivity</string>
+    <string name="email_text">Enter your email</string>
+    <string name="password_text">Enter your password</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="login_text">login</string>
+    <string name="register_text">Register</string>
     <string-array name="furniture_spinner">
         <item>Without furniture</item>
         <item>With furniture</item>

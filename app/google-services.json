@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "695792348583",
+    "firebase_url": "https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "maaaaap",
     "storage_bucket": "maaaaap.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "695792348583-i07h6n590pt9j6ae0ahctgovvtf1ogra.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.valo_basha",
+            "certificate_hash": "fbef45fe79c3d34d8e79d0ae812e0f83cc17f285"
+          }
+        },
         {
           "client_id": "695792348583-fmhgck0dtud26f5ns75k7pshbve952im.apps.googleusercontent.com",
           "client_type": 3

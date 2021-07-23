@@ -3,6 +3,7 @@ package com.example.valo_basha;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.os.Parcelable;
@@ -23,9 +24,22 @@ import com.google.firebase.auth.FirebaseUser;
  * create an instance of this fragment.
  */
 public class fragment_landlord extends Fragment {
+  /*  private Button login;
+    private EditText email, password;
+    private TextView msg;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+        login = findViewById(R.id.loginButton_id);
+        email = findViewById(R.id.email_id);
+        password = findViewById(R.id.password_id);
+        msg = findViewById(R.id.msg_id);
+    }*/
+    //////********************************************************************////////////////////////////////////////////////////////////
     private FirebaseAuth fAuth;
-    Button proceed, confirm;
-    EditText building_name, name, phn_no, otp;
+    private Button login;
+    private EditText email, password;
     TextView msg;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -64,41 +78,33 @@ public class fragment_landlord extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_landlord, container, false);
-        building_name = (EditText) view.findViewById(R.id.building_name);
-        name = (EditText) view.findViewById(R.id.name);
-        phn_no = (EditText) view.findViewById(R.id.phn_no);
-        otp = view.findViewById(R.id.otp);
-        msg = view.findViewById(R.id.msg);
-        proceed = view.findViewById(R.id.btn_proceed);
-        confirm = view.findViewById(R.id.btn_otp);
+        email = (EditText) view.findViewById(R.id.email_id);
+        password = view.findViewById(R.id.password_id);
+       // msg = view.findViewById(R.id.msg);
+        login = view.findViewById(R.id.loginButton_id);
+      //  name = (EditText) view.findViewById(R.id.name);
+      //  phn_no = (EditText) view.findViewById(R.id.phn_no);
+    //    otp = view.findViewById(R.id.otp);
 
-        proceed.setOnClickListener(new View.OnClickListener() {
+        login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                otp.setVisibility(View.VISIBLE);
-                confirm.setVisibility(View.VISIBLE);
+
             }
         });
-        confirm.setOnClickListener(new View.OnClickListener() {
+        msg.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View view) {
-                //msg.setVisibility(View.VISIBLE);
-                Apartment apartment = new Apartment();
-                apartment.name = building_name.getText().toString();
-                apartment.owner = name.getText().toString();
-                apartment.contactInfo = phn_no.getText().toString();
-                Intent intent = new Intent(getActivity(), NewDetails.class);
-                Log.d("JAMIL", "created intent");
-                intent.putExtra("apartment", (Parcelable) apartment);
-                Log.d("JAMIL", "sent value to intent");
-                startActivity(intent);
+                    public  void onClick(View view){
+                
             }
         });
 

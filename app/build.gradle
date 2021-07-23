@@ -49,7 +49,9 @@ dependencies {
     implementation 'com.makeramen:roundedimageview:2.3.0'
     implementation 'com.github.smarteist:autoimageslider:1.4.0'
     implementation platform('com.google.firebase:firebase-bom:28.2.0')
-    implementation 'com.google.firebase:firebase-auth'
-    implementation 'com.google.firebase:firebase-database'
+  //  implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-auth:21.0.1'
+ //   implementation 'com.google.firebase:firebase-database'
+    implementation 'com.google.firebase:firebase-database:20.0.0'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.19'
 }
