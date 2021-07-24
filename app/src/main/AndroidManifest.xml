@@ -22,7 +22,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".apartment_list"></activity>
+        <activity android:name=".emailReg"></activity>
+        <activity android:name=".emailLogin" />
+        <activity android:name=".profileActivity" />
+        <activity android:name=".user_info" />
+        <activity android:name=".Login_Register" />
+        <activity android:name=".Register_email" />
+        <activity android:name=".apartment_list" />
         <activity android:name=".filter_activity" />
         <activity
             android:name=".AddPicture"
@@ -38,6 +44,7 @@
         <activity android:name=".NewDetails" />
         <activity android:name=".Report_activity" />
         <activity android:name=".InDepthApartmentDetails" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.valo_basha.android.fileprovider"
@@ -45,7 +52,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
