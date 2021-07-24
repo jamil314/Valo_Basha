@@ -1,14 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragment_tutorial">
-
-    <TextView
-        android:id="@+id/textView"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="182dp"
-        android:text="This Tutorial Will Help You Understand How To Use All The Features Of This App"
-        android:textSize="20sp" />
-</FrameLayout>
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tutorialText1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="20dp"
+            android:text="@string/tutorial_text"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tutorialQ1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/tq1"
+            android:textSize="20sp"
+            android:layout_below="@id/tutorialText1" />
+
+        <TextView
+            android:id="@+id/tutorialA1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/ta1"
+            android:textSize="20sp"
+            android:layout_below="@id/tutorialQ1" />
+        <TextView
+            android:id="@+id/tutorialQ2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/tq2"
+            android:textSize="20sp"
+            android:layout_below="@id/tutorialA1" />
+        <TextView
+            android:id="@+id/tutorialA2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/ta2"
+            android:textSize="20sp"
+            android:layout_below="@id/tutorialQ2" />
+        <TextView
+            android:id="@+id/tutorialQ3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/tq3"
+            android:textSize="20sp"
+            android:layout_below="@id/tutorialA2" />
+        <TextView
+            android:id="@+id/tutorialA3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/ta3"
+            android:textSize="20sp"
+            android:layout_below="@id/tutorialQ3" />
+        <TextView
+            android:id="@+id/tutorialQ4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/tq4"
+            android:textSize="20sp"
+            android:layout_below="@id/tutorialA3" />
+        <TextView
+            android:id="@+id/tutorialA4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/ta4"
+            android:textSize="20sp"
+            android:layout_below="@id/tutorialQ4" />
+
+
+    </RelativeLayout>
+
+</ScrollView>
