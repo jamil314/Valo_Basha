@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.internal.Constants;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -35,6 +36,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -51,17 +53,6 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    public Location currentLocation;
-    boolean locationPermission = false;
-    FusedLocationProviderClient locationProviderClient;
-    final int REQUEST_CODE = 101;
-    GoogleMap map;
-    SupportMapFragment mapFragment;
-    SearchView searchView;
-    Button centreButton;
-    LocationManager locationManager;
-    FusedLocationProviderClient fusedLocationProviderClient;
-    String currentFragment ="map";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,19 +62,21 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.setId(R.id.nav_login);
         NavigationView navigationView = findViewById(R.id.nav_view);
+        //navigationView.setCheckedItem(2);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.open, R.string.close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_maps, R.id.nav_feedback, R.id.nav_tutorial, R.id.nav_login, R.id.gmap, R.id.nav_developers)
+                R.id.nav_maps, R.id.nav_feedback, R.id.nav_tutorial, R.id.nav_login, R.id.gmap, R.id.nav_developers, R.id.nav_share)
                 .setDrawerLayout(drawer)
                 .build();
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+        //selectItem(1);
     }
 
     @Override
@@ -100,5 +93,23 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+    private void selectItem(int position) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        switch (position) {
+            case 0:
+                ft.replace(R.id.fragmentContainerView, new map_container()).commit();
+                break;
+
+
+            case 1:
+                ft.replace(R.id.mobile_navigation, new fragment_login()).commit();
+                break;
+
+        }
+        /*mDrawerList.setItemChecked(position, true);
+        //setTitle(title[position]);
+        mDrawerLayout.closeDrawer(mDrawerList);*/
     }
 }

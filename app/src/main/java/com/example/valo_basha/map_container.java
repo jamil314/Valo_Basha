@@ -2,6 +2,8 @@ package com.example.valo_basha;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -26,6 +28,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SearchView;
+import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,6 +67,15 @@ import static android.app.Activity.RESULT_OK;
  * create an instance of this fragment.
  */
 public class map_container extends Fragment {
+
+
+    // for filter
+    Spinner furniture;
+    EditText minBed, minBath, minRent, minArea, maxBed, maxBath, maxRent, maxArea;
+    Switch isBed, isBath, isRent, isArea, isFurn;
+    Button done;
+    Filters filter = global_variables.prev_filter;
+    //------------------
 
     Button centreButton, b_list, b_filter;
     FusedLocationProviderClient client;
@@ -118,6 +131,9 @@ public class map_container extends Fragment {
                              Bundle savedInstanceState) {
         Log.d("JAMIL", "map_container -> onCreatView");
         // Inflate the layout for this fragment
+
+
+
         View view = inflater.inflate(R.layout.fragment_map_container, container, false);
         Log.d("JAMIL", "==========");
 
@@ -167,8 +183,9 @@ public class map_container extends Fragment {
         b_filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), filter_activity.class);
-                startActivity(intent);
+               /* Intent intent = new Intent(getActivity(), filter_activity.class);
+                startActivity(intent);*/
+                filter();
             }
         });
 
@@ -229,11 +246,19 @@ public class map_container extends Fragment {
                         addressList = geocoder.getFromLocationName(qlocation, 1);
                     } catch (IOException e) {
                         e.printStackTrace();
+                        Toast toast = Toast.makeText(getActivity(),
+                                "Try again please", Toast.LENGTH_LONG);
+                        toast.show();
+                        Log.d("jAMIL", "Address fetching failed: "+e.getMessage());
+                        return false;
                     }
                     Log.d("JAMIL", "getting address");
                     Log.d("JAMIL", String.valueOf(addressList.size()));
                     if (addressList.size() == 0) {
                         Log.d("JAMIL", "no result found");
+                        Toast toast = Toast.makeText(getActivity(),
+                                "No result found for "+qlocation, Toast.LENGTH_LONG);
+                        toast.show();
                         return false;
                     }
                     Address address = addressList.get(0);
@@ -261,6 +286,8 @@ public class map_container extends Fragment {
 
 
     }
+
+
 
 
    /* @Override
@@ -336,6 +363,192 @@ public class map_container extends Fragment {
         }
     }
 
+
+
+
+
+    private void filter() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        final View popup = getLayoutInflater().inflate(R.layout.popup_filter, null);
+        minArea = popup.findViewById(R.id.area_min);
+        minBath = popup.findViewById(R.id.bathroom_min);
+        minBed = popup.findViewById(R.id.bedroom_min);
+        minRent = popup.findViewById(R.id.rent_min);
+        maxArea = popup.findViewById(R.id.area_max);
+        maxBath = popup.findViewById(R.id.bathroom_max);
+        maxBed = popup.findViewById(R.id.bedroom_max);
+        maxRent = popup.findViewById(R.id.rent_max);
+        isArea = popup.findViewById(R.id.sw_area);
+        isBath = popup.findViewById(R.id.sw_bath);
+        isBed = popup.findViewById(R.id.sw_bed);
+        isRent = popup.findViewById(R.id.sw_rent);
+        isFurn = popup.findViewById(R.id.sw_furniture);
+        furniture = popup.findViewById(R.id.spinner);
+        done = popup.findViewById(R.id.filter_confirm);
+        reset();
+        builder.setView(popup);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(error()) return;
+                gmap.marker_filter(filter);
+                global_variables.prev_filter = filter;
+                dialog.dismiss();
+            }
+        });
+    }
+
+
+    private void reset() {
+        if(filter.isArea) isArea.setChecked(true);
+        if(filter.isBed) isBed.setChecked(true);
+        if(filter.isBath) isBath.setChecked(true);
+        if(filter.isRent) isRent.setChecked(true);
+        if(filter.isFurn) isFurn.setChecked(true);
+
+        if(filter.minArea!=0) minArea.setText(String.valueOf(filter.minArea));
+        if(filter.minBed!=0) minBed.setText(String.valueOf(filter.minBed));
+        if(filter.minBath!=0) minBath.setText(String.valueOf(filter.minBath));
+        if(filter.minRent!=0) minRent.setText(String.valueOf(filter.minRent));
+
+        if(filter.maxArea!=100000000) maxArea.setText(String.valueOf(filter.maxArea));
+        if(filter.maxBed!=10) maxBed.setText(String.valueOf(filter.maxBed));
+        if(filter.maxBath!=10) maxBath.setText(String.valueOf(filter.maxBath));
+        if(filter.maxRent!=10000000) maxRent.setText(String.valueOf(filter.maxRent));
+
+        if(filter.furn) furniture.setSelection(1);
+    }
+
+    boolean error(){
+        boolean err = false;
+        String str;
+        if(isArea.isChecked()) {
+            filter.isArea = true;
+
+            str = minArea.getText().toString();
+            if(str.equals("")) filter.minArea = 0;
+            else{
+                if (Double.parseDouble(str) < 0) {
+                    err = true;
+                    minArea.setError("0 - 100000000");
+                } else if (Double.parseDouble(str) > 100000000) {
+                    err = true;
+                    minArea.setError("0 - 100000000");
+                } else filter.minArea = Double.parseDouble(str);
+            }
+
+            str = maxArea.getText().toString();
+            if(str.equals("")) filter.maxArea = 100000000;
+            else{
+                if (Double.parseDouble(str) < 0) {
+                    err = true;
+                    maxArea.setError("0 - 100000000");
+                } else if (Double.parseDouble(str) > 100000000) {
+                    err = true;
+                    maxArea.setError("0 - 100000000");
+                } else filter.maxArea = Double.parseDouble(str);
+            }
+
+        } else filter.isArea = false;
+
+        if(isBed.isChecked()) {
+            filter.isBed = true;
+
+            str = minBed.getText().toString();
+            if(str.equals("")) filter.minBed = 0;
+            else{
+                if (Integer.parseInt(str) < 0) {
+                    err = true;
+                    minBed.setError("0 - 10");
+                } else if (Integer.parseInt(str) > 10) {
+                    err = true;
+                    minBed.setError("0 - 10");
+                } else filter.minBed = Integer.parseInt(str);
+            }
+
+            str = maxBed.getText().toString();
+            if(str.equals("")) filter.maxBed = 10;
+            else{
+                if (Integer.parseInt(str) < 0) {
+                    err = true;
+                    maxBed.setError("0 - 10");
+                } else if (Integer.parseInt(str) > 10) {
+                    err = true;
+                    maxBed.setError("0 - 10");
+                } else filter.maxBed = Integer.parseInt(str);
+            }
+
+        } else filter.isBed = false;
+
+        if(isBath.isChecked()) {
+            filter.isBath = true;
+
+            str = minBath.getText().toString();
+            if(str.equals("")) filter.minBath = 0;
+            else{
+                if (Integer.parseInt(str) < 0) {
+                    err = true;
+                    minBath.setError("0 - 10");
+                } else if (Integer.parseInt(str) > 10) {
+                    err = true;
+                    minBath.setError("0 - 10");
+                } else filter.minBath = Integer.parseInt(str);
+            }
+
+            str = maxBath.getText().toString();
+            if(str.equals("")) filter.maxBath = 10;
+            else{
+                if (Integer.parseInt(str) < 0) {
+                    err = true;
+                    maxBath.setError("0 - 10");
+                } else if (Integer.parseInt(str) > 10) {
+                    err = true;
+                    maxBath.setError("0 - 10");
+                } else filter.maxBath = Integer.parseInt(str);
+            }
+
+        } else filter.isBath = false;
+
+        if(isRent.isChecked()) {
+            filter.isRent = true;
+
+            str = minRent.getText().toString();
+            if(str.equals("")) filter.minRent = 0;
+            else{
+                if (Integer.parseInt(str) < 0) {
+                    err = true;
+                    minRent.setError("0 - 10000000");
+                } else if (Integer.parseInt(str) > 10000000) {
+                    err = true;
+                    minRent.setError("0 - 10000000");
+                } else filter.minRent = Integer.parseInt(str);
+            }
+
+            str = maxRent.getText().toString();
+            if(str.equals("")) filter.maxRent = 10000000;
+            else{
+                if (Integer.parseInt(str) < 0) {
+                    err = true;
+                    maxRent.setError("0 - 10000000");
+                } else if (Integer.parseInt(str) > 10000000) {
+                    err = true;
+                    maxRent.setError("0 - 10000000");
+                } else filter.maxRent = Integer.parseInt(str);
+            }
+
+        } else filter.isRent = false;
+
+        if(isFurn.isChecked()){
+            filter.isFurn = true;
+            if(furniture.getSelectedItem().equals("With furniture")) filter.furn = true;
+            else filter.furn = false;
+        } else filter.isFurn = false;
+
+        return err;
+    }
 
 
 

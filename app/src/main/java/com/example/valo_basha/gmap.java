@@ -126,7 +126,7 @@ public class gmap extends Fragment {
                     if(flag) {
                         apartments.clear();
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                            Log.d("JAMIL", dataSnapshot.getKey() + ": " + String.valueOf(dataSnapshot.child("name").getValue()));
+                           // Log.d("JAMIL", dataSnapshot.getKey() + ": " + String.valueOf(dataSnapshot.child("name").getValue()));
                             Apartment apartment = dataSnapshot.getValue(Apartment.class);
                             apartments.add(apartment);
                         }
@@ -152,7 +152,7 @@ public class gmap extends Fragment {
         houses.clear();
         Log.d("JAMIL" , "Houses cleared");
         for(Apartment a:apartments){
-            Log.d("JAMIL", count+" "+a.name);
+            //Log.d("JAMIL", count+" "+a.name);
             houses.add(gMap.addMarker(new MarkerOptions().position(new LatLng(a.lat, a.lon))
                     .icon(bitmapDescriptor(getActivity().getApplicationContext(), R.drawable.ic_apartment))
                     .snippet(count+"")));

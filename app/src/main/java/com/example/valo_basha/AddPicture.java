@@ -132,27 +132,33 @@ public class AddPicture extends AppCompatActivity {
                 Log.d("JAMIL", "cnt: "+cnt);
                 global_variables.id++;
                 global_variables.cnt++;
-                finish();
+                //finish();
             }
         });
     }
 
     private void uploadImage() {
         FirebaseStorage storage =FirebaseStorage.getInstance();
-        Log.d("JAMIL", String.valueOf(storage));
+        Log.d("JAMIL","Storage: " +String.valueOf(storage));
         int i=0;
+        final int[] x = { urilist.size() };
         for(Uri uri:urilist){
             i++;
             StorageReference ref = storage.getReference("img/"+apartment.id+"/"+i);
-            ref.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            ref.putFile(uri).addOnSuccessListener(AddPicture.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             Log.d("JAMIL", "Upload successfull");
+                            x[0]--;
+                            if(x[0] == 0) finish();
+
                         }
-                    }).addOnFailureListener(new OnFailureListener() {
+                    }).addOnFailureListener(AddPicture.this, new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Log.d("JAMIL", "Upload not successfull");
+                    x[0]--;
+                    if(x[0] == 0) finish();
 
                 }
             });
