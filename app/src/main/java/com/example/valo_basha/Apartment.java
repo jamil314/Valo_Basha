@@ -10,8 +10,8 @@ import java.util.Collection;
 import java.util.List;
 
 public class Apartment implements Parcelable {
-    String name = "Default building", owner= "Default owner", contactInfo = "2441139", address, extra;
-    int totalFloors=7, bedrooms=3, bathrooms=2, rent=15000, id=-1;
+    String name = "Default building", owner= "Default owner", contactInfo = "2441139", address, extra, uid;
+    int totalFloors=7, bedrooms=3, bathrooms=2, rent=15000, id=-1, image_count;
     double area=1780, lat, lon;
     boolean furniture=false;
     long mask=127;
@@ -36,11 +36,13 @@ public class Apartment implements Parcelable {
         contactInfo = in.readString();
         extra = in.readString();
         address = in.readString();
+        uid = in.readString();
         totalFloors = in.readInt();
         bedrooms = in.readInt();
         bathrooms = in.readInt();
         rent = in.readInt();
         id = in.readInt();
+        image_count = in.readInt();
         mask = in.readLong();
         area = in.readDouble();
         lat = in.readDouble();
@@ -65,6 +67,7 @@ public class Apartment implements Parcelable {
         return 0;
     }
 
+
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(name);
@@ -72,11 +75,13 @@ public class Apartment implements Parcelable {
         parcel.writeString(contactInfo);
         parcel.writeString(extra);
         parcel.writeString(address);
+        parcel.writeString(uid);
         parcel.writeInt(totalFloors);
         parcel.writeInt(bedrooms);
         parcel.writeInt(bathrooms);
         parcel.writeInt(rent);
         parcel.writeInt(id);
+        parcel.writeInt(image_count);
         parcel.writeLong(mask);
         parcel.writeDouble(area);
         parcel.writeDouble(lat);
@@ -210,6 +215,22 @@ public class Apartment implements Parcelable {
 
     public void setLon(double lon) {
         this.lon = lon;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public int getImage_count() {
+        return image_count;
+    }
+
+    public void setImage_count(int image_count) {
+        this.image_count = image_count;
     }
 
     public static Creator<Apartment> getCREATOR() {

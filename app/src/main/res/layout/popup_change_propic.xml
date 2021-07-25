@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/popup_change_propic"
+    android:background="@color/colorPrimary">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="3dp"/>
+        <Button
+            android:id="@+id/remove"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Remove profile picture"
+            android:textSize="25sp"
+            android:textAllCaps="false"
+            android:background="@drawable/custom_button"/>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="3dp"/>
+        <Button
+            android:id="@+id/gallery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Choose picture from gallery"
+            android:textSize="25sp"
+            android:textAllCaps="false"
+            android:background="@drawable/custom_button"/>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="3dp"/>
+        <Button
+            android:id="@+id/camera"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Take a new picture"
+            android:textSize="25sp"
+            android:textAllCaps="false"
+            android:background="@drawable/custom_button"/>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="3dp"/>
+
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

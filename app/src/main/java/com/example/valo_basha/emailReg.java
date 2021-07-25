@@ -85,7 +85,7 @@ public class emailReg extends AppCompatActivity {
                                             .getReference().child("users").child(uid);
                                     mDatabase.child("email").setValue(Email);
                                     mDatabase.child("name").setValue(Name);
-                                    
+                                    mDatabase.child("propic").setValue("0");
                                     finish();
                                 }
                             }).addOnFailureListener(new OnFailureListener() {

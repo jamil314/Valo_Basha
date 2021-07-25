@@ -44,7 +44,12 @@ public class NewDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_details);
         Log.d("JAMIL", "Opened intent");
+        Intent Cintent = getIntent();
         apartment = new Apartment();
+        apartment.owner = Cintent.getStringExtra("name");
+        apartment.contactInfo = Cintent.getStringExtra("phone");
+        apartment.uid = Cintent.getStringExtra("id");
+        Log.d("JAMIL", apartment.uid);
         getSupportActionBar().setTitle("Fill in all the details");
         if(global_variables.BuildingStatus == 2) {
             global_variables.BuildingStatus = 0;
