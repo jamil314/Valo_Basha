@@ -8,6 +8,7 @@
     tools:context=".emailLogin">
 
     <LinearLayout
+        android:id="@+id/linearLayout10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -91,7 +92,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/forgot"
-        android:textColor="@color/quantum_lightblue"/>
+        android:textColor="@color/quantum_yellow"/>
 
     <TextView
         android:id="@+id/no_acc"
@@ -113,7 +114,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/no_acc"
-        android:textColor="@color/quantum_lightblue"/>
+        android:textColor="@color/quantum_yellow"/>
     <TextView
         android:id="@+id/sign_up_phone"
         android:layout_width="wrap_content"
@@ -124,6 +125,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sign_up"
-        android:textColor="@color/quantum_lightblue"/>
+        android:textColor="@color/quantum_yellow"/>
+
+    <ImageView
+        android:id="@+id/email_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

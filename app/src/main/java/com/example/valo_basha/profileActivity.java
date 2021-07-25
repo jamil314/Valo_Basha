@@ -14,8 +14,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.CubeGrid;
+import com.github.ybq.android.spinkit.style.DoubleBounce;
+import com.github.ybq.android.spinkit.style.Wave;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -43,11 +48,13 @@ public class profileActivity extends AppCompatActivity {
     ImageView propic;
     FirebaseAuth fAuth;
     FirebaseUser user;
+    ProgressBar stall, progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_profile);
+        stall = findViewById(R.id.stall);
         name = findViewById(R.id.name);
         email = findViewById(R.id.email);
         phone = findViewById(R.id.phone);
@@ -66,6 +73,7 @@ public class profileActivity extends AppCompatActivity {
         user = fAuth.getCurrentUser();
 
         if(user == null){
+            stall.setVisibility(View.INVISIBLE);
             getSupportActionBar().setTitle("Anonymous");
             propic.setImageResource(R.drawable.anonymous);
             nullUser.setVisibility(View.VISIBLE);
@@ -79,49 +87,68 @@ public class profileActivity extends AppCompatActivity {
             login.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    final AlertDialog.Builder login_popup = new AlertDialog.Builder(view.getContext());
-                    login_popup.setTitle("Log in using:");
 
-                    login_popup.setNegativeButton("Email", new DialogInterface.OnClickListener() {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                    final View popup = getLayoutInflater().inflate(R.layout.popup_two_option, null);
+
+                    TextView text = popup.findViewById(R.id.text);
+                    Button bt_email = popup.findViewById(R.id.op1);
+                    TextView bt_phone = popup.findViewById(R.id.op2);
+                    bt_email.setText("Email");
+                    bt_phone.setText("Phone");
+                    text.setText("  Log in with:");
+
+                    builder.setView(popup);
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                    bt_email.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                        public void onClick(View view) {
                             startActivity(new Intent(getApplicationContext(), emailLogin.class));
+                            dialog.dismiss();
                         }
                     });
-
-                    login_popup.setPositiveButton("Phone", new DialogInterface.OnClickListener() {
+                    bt_phone.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //startActivity(new Intent(getApplicationContext(), Login_Register.class));
+                        public void onClick(View view) {
+                            dialog.dismiss();
                         }
                     });
-                    login_popup.create().show();
                 }
             });
 
             signup.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    final AlertDialog.Builder signup_popup = new AlertDialog.Builder(view.getContext());
-                    signup_popup.setTitle("Sign up using:");
 
-                    signup_popup.setNegativeButton("Email", new DialogInterface.OnClickListener() {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                    final View popup = getLayoutInflater().inflate(R.layout.popup_two_option, null);
+
+                    TextView text = popup.findViewById(R.id.text);
+                    Button bt_email = popup.findViewById(R.id.op1);
+                    TextView bt_phone = popup.findViewById(R.id.op2);
+                    bt_email.setText("Email");
+                    bt_phone.setText("Phone");
+                    text.setText("  Sign up with:");
+
+                    builder.setView(popup);
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                    bt_email.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                        public void onClick(View view) {
                             startActivity(new Intent(getApplicationContext(), emailReg.class));
+                            dialog.dismiss();
                         }
                     });
-
-                    signup_popup.setPositiveButton("Phone", new DialogInterface.OnClickListener() {
+                    bt_phone.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //startActivity(new Intent(getApplicationContext(), Login_Register.class));
+                        public void onClick(View view) {
+                            dialog.dismiss();
                         }
                     });
-                    signup_popup.create().show();
                 }
             });
-
 
         } else {
             nullUser.setVisibility(View.INVISIBLE);
@@ -137,6 +164,8 @@ public class profileActivity extends AppCompatActivity {
             user_info(userId);
 
             changePropic(userId);
+
+            Log.d("JAMIL", String.valueOf(user.isEmailVerified()));
 
             edit.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -238,6 +267,7 @@ public class profileActivity extends AppCompatActivity {
                                 Log.d("JAMIL", "Photo download successful");
                                 Bitmap bt = BitmapFactory.decodeFile(file.getAbsolutePath());
                                 propic.setImageBitmap(bt);
+                                stall.setVisibility(View.INVISIBLE);
                                 //propic.setImageURI(Uri.fromFile(file));
                             }
                         }).addOnFailureListener(new OnFailureListener() {

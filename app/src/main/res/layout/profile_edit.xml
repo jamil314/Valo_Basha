@@ -29,8 +29,8 @@
 
             <ImageView
                 android:id="@+id/profile_pic"
-                android:layout_width="100dp"
-                android:layout_height="100dp" />
+                android:layout_width="wrap_content"
+                android:layout_height="150dp" />
 
             <Space
                 android:layout_width="match_parent"
@@ -133,7 +133,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="No info"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:maxLines="7"/>
                 </LinearLayout>
 
                 <LinearLayout

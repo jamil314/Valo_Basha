@@ -50,6 +50,7 @@ public class SplashScreen extends AppCompatActivity {
                 if(global_variables.idDone) return;
                 global_variables.idDone = true;
                 global_variables.id = Integer.parseInt(task.getResult().getValue().toString());
+                Log.d("JAMIL", "Id: "+global_variables.id);
             }
         });
         mDatabaseAdd.child("mandatory_info").child("count").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -59,6 +60,7 @@ public class SplashScreen extends AppCompatActivity {
                 if(global_variables.cntDone) return;
                 global_variables.cntDone = true;
                 global_variables.cnt = Integer.parseInt(task.getResult().getValue().toString());
+                Log.d("JAMIL", "Cnt: "+global_variables.cnt);
             }
         });
     }

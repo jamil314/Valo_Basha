@@ -73,7 +73,7 @@ public class fragment_landlord extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_landlord, container, false);
-        building_name = (EditText) view.findViewById(R.id.building_name);
+       /* building_name = (EditText) view.findViewById(R.id.building_name);
         name = (EditText) view.findViewById(R.id.name);
         phn_no = (EditText) view.findViewById(R.id.phn_no);
         otp = view.findViewById(R.id.otp);
@@ -114,7 +114,7 @@ public class fragment_landlord extends Fragment {
                 startActivity(intent);
             }
         });
-
+*/
 
         return view;
     }

@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +30,7 @@ public class emailLogin extends AppCompatActivity {
     TextView forgot, phone, signup, signupPhone;
     FirebaseAuth fAuth;
     FirebaseUser user;
+    ImageView icon;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +42,8 @@ public class emailLogin extends AppCompatActivity {
         phone = findViewById(R.id.phone);
         signup = findViewById(R.id.sign_up);
         signupPhone = findViewById(R.id.sign_up_phone);
+        icon = findViewById(R.id.email_icon);
+        icon.setImageResource(R.drawable.email);
         fAuth = FirebaseAuth.getInstance();
         user = fAuth.getCurrentUser();
         if(user!=null){
@@ -116,6 +120,13 @@ public class emailLogin extends AppCompatActivity {
                 });
 
                 passwordResetDialog.create().show();
+            }
+        });
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), emailReg.class));
+                finish();
             }
         });
     }

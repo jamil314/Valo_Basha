@@ -11,6 +11,8 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -30,6 +32,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -71,7 +74,8 @@ public class ProfileEdit extends AppCompatActivity {
         confirm = findViewById(R.id.confirm);
         rtdb = FirebaseDatabase.getInstance("https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app/")
                 .getReference().child("users").child(uid);
-        propic.setImageResource(R.drawable.anonymous);
+
+        changePropic(uid);
         editPropic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -121,6 +125,9 @@ public class ProfileEdit extends AppCompatActivity {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                rtdb.child("phone").setValue(phone.getText().toString());
+                rtdb.child("extra").setValue(about.getText().toString());
+                Log.d("JAMIL", rtdb.toString());
                 if(upload){
                     FirebaseStorage storage =FirebaseStorage.getInstance();
                     StorageReference ref = storage.getReference("propics").child(uid);
@@ -200,7 +207,43 @@ public class ProfileEdit extends AppCompatActivity {
         }
     }
 
+    private void changePropic(String userId) {
+        DatabaseReference mDatabase;
+        mDatabase = FirebaseDatabase.getInstance("https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                .getReference().child("users").child(userId).child("propic");
+        mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.getResult().getValue().toString().equals("0")){
+                    propic.setImageResource(R.drawable.anonymous);
+                } else {
+                    Log.d("JAMIL", "Photo download request sent");
+                    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                    StorageReference storage = FirebaseStorage.getInstance().getReference().child("propics").child(userId);
+                    try {
+                        final File file = File.createTempFile(timeStamp, userId);
+                        storage.getFile(file).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                Log.d("JAMIL", "Photo download successful");
+                                Bitmap bt = BitmapFactory.decodeFile(file.getAbsolutePath());
+                                propic.setImageBitmap(bt);
+                                //propic.setImageURI(Uri.fromFile(file));
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d("JAMIL", "Photo download failed:"+e);
+                            }
+                        });
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
+                }
+            }
+        });
+    }
 
 
 }

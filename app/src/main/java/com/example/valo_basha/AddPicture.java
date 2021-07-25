@@ -23,6 +23,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -52,6 +54,9 @@ public class AddPicture extends AppCompatActivity {
     ProgressDialog dialog;
     ArrayList<Uri> urilist = new ArrayList<>();
     String currentPhotoPath;
+    Boolean locationPicked = false;
+    ProgressBar stall;
+    TextView stallMsg;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +70,10 @@ public class AddPicture extends AppCompatActivity {
         cont = findViewById(R.id.conti);
         current = findViewById(R.id.btn_current);
         fromMap = findViewById(R.id.btn_from_map);
-
+        stall = findViewById(R.id.stall);
+        stallMsg = findViewById(R.id.stall_msg);
+        stall.setVisibility(View.INVISIBLE);
+        stallMsg.setVisibility(View.INVISIBLE);
         gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,6 +97,7 @@ public class AddPicture extends AppCompatActivity {
         current.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                locationPicked = true;
                 global_variables.buildingX = global_variables.user_location.getLatitude();
                 global_variables.buildingY = global_variables.user_location.getLongitude();
             }
@@ -97,6 +106,7 @@ public class AddPicture extends AppCompatActivity {
         fromMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                locationPicked = true;
                 Log.d("JAMIL", global_variables.BuildingStatus+"");
                 global_variables.BuildingStatus = 3;
                 Intent intent1 = new Intent(getApplicationContext(), MainActivity.class);
@@ -107,9 +117,14 @@ public class AddPicture extends AppCompatActivity {
         cont.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast toast = Toast.makeText(getApplicationContext(),
-                        "New Apartment added successfully", Toast.LENGTH_LONG);
-                toast.show();
+                if(!locationPicked){
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "Please set a location", Toast.LENGTH_LONG);
+                    toast.show();
+                    current.setError("set a location");
+                    fromMap.setError("set a location");
+                    return;
+                }
                 DatabaseReference mDatabaseAdd;
                 mDatabaseAdd = FirebaseDatabase.getInstance("https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
                 Log.d("JAMIL", String.valueOf(mDatabaseAdd));
@@ -118,13 +133,13 @@ public class AddPicture extends AppCompatActivity {
                 uploadImage();
                 apartment.lat = global_variables.buildingX;
                 apartment.lon = global_variables.buildingY;
+                apartment.image_count = urilist.size();
                 Log.d("JAMIL_Location", apartment.lat+" "+apartment.lon);
                 apartment.address = fetchaddress(apartment.lat, apartment.lon);
                 Log.d("JAMIL_Address", apartment.address);
                 Log.d("JAMIL", "id: "+id);
                 mDatabaseAdd.child("mandatory_info").child("id").setValue(id+1);
-                mDatabaseAdd.child("mandatory_info").child("owner->id").child(apartment.owner).
-                        child(String.valueOf(id)).setValue(id);
+                mDatabaseAdd.child("users").child(apartment.uid).child("apartment").child(String.valueOf(id)).setValue(id);
                 mDatabaseAdd.child("ads").child(id+"").setValue(apartment); //called listener in gMap
                 int cnt = global_variables.cnt;
                 mDatabaseAdd.child("mandatory_info").child("count").setValue(cnt+1);
@@ -142,6 +157,18 @@ public class AddPicture extends AppCompatActivity {
         Log.d("JAMIL","Storage: " +String.valueOf(storage));
         int i=0;
         final int[] x = { urilist.size() };
+        int y=urilist.size();
+        if(y==0){
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "Successfuly added new apartment", Toast.LENGTH_LONG);
+            toast.show();
+            finish();
+        } else {
+            stall.setVisibility(View.VISIBLE);
+            stallMsg.setVisibility(View.VISIBLE);
+            stallMsg.setText("Uploading image :"+(y-x[0]+1)+"/"+y+"\nPlease wait");
+
+        }
         for(Uri uri:urilist){
             i++;
             StorageReference ref = storage.getReference("img/"+apartment.id+"/"+i);
@@ -150,7 +177,12 @@ public class AddPicture extends AppCompatActivity {
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             Log.d("JAMIL", "Upload successfull");
                             x[0]--;
-                            if(x[0] == 0) finish();
+                            if(x[0] == 0) {
+                                Toast toast = Toast.makeText(getApplicationContext(),
+                                        "Successfuly added new apartment", Toast.LENGTH_LONG);
+                                toast.show();
+                                finish();
+                            } else stallMsg.setText("Uploading image :"+(y-x[0]+1)+"/"+y+"\nPlease wait");
 
                         }
                     }).addOnFailureListener(AddPicture.this, new OnFailureListener() {
@@ -158,7 +190,12 @@ public class AddPicture extends AppCompatActivity {
                 public void onFailure(@NonNull Exception e) {
                     Log.d("JAMIL", "Upload not successfull");
                     x[0]--;
-                    if(x[0] == 0) finish();
+                    if(x[0] == 0) {
+                        Toast toast = Toast.makeText(getApplicationContext(),
+                                "Successfuly added new apartment", Toast.LENGTH_LONG);
+                        toast.show();
+                        finish();
+                    } else stallMsg.setText("Uploading image :"+(y-x[0]+1)+"/"+y+"\nPlease wait");
 
                 }
             });

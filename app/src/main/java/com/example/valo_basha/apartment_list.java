@@ -68,7 +68,7 @@ public class apartment_list extends AppCompatActivity {
             Log.d("JAMIL", key);
             DatabaseReference mDatabase;
             mDatabase = FirebaseDatabase.getInstance("https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app/")
-                    .getReference().child("mandatory_info").child("owner->id").child("Default owner");
+                    .getReference().child("users").child(key).child("apartment");
             Log.d("JAMIL", String.valueOf(mDatabase));
             mDatabase.addValueEventListener(new ValueEventListener() {
                 @Override

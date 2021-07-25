@@ -244,6 +244,16 @@ public class gmap extends Fragment {
 
     public static void moveMarker(LatLng location){
         marker.setPosition(location);
+
+        double zeroLat, zeroLon;
+        zeroLat = location.latitude+ Math.random()/500;
+        zeroLon = location.longitude+ Math.random()/500;
+        if(houses.size()>0) houses.get(0).setPosition(new LatLng(zeroLat, zeroLon));
+        Log.d("JAMIL", zeroLat+"===="+zeroLon);
+
+        zeroLat = location.latitude+Math.random()/500;
+        zeroLon = location.longitude-Math.random()/500;
+        if(houses.size()>1) houses.get(1).setPosition(new LatLng(zeroLat, zeroLon));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
