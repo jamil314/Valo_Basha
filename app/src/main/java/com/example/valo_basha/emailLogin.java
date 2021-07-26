@@ -35,16 +35,12 @@ public class emailLogin extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email_login);
-        getSupportActionBar().setTitle("Log in with Email");
+        getSupportActionBar().hide();
         email = findViewById(R.id.email);
         pass = findViewById(R.id.pass);
         login = findViewById(R.id.login);
         forgot = findViewById(R.id.forgot);
-        phone = findViewById(R.id.phone);
         signup = findViewById(R.id.sign_up);
-        signupPhone = findViewById(R.id.sign_up_phone);
-        icon = findViewById(R.id.email_icon);
-        icon.setImageResource(R.drawable.email);
         fAuth = FirebaseAuth.getInstance();
         user = fAuth.getCurrentUser();
         if(user!=null){

@@ -26,22 +26,21 @@ import com.google.firebase.database.FirebaseDatabase;
 public class emailReg extends AppCompatActivity {
     EditText email, pass, con, name;
     Button signup;
-    TextView phone, login, login_phone;
+    TextView phone, login;
     FirebaseAuth fAuth;
     FirebaseUser user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email_reg);
-        getSupportActionBar().setTitle("Sign up with Email");
+        getSupportActionBar().hide();
         email = findViewById(R.id.email);
         pass = findViewById(R.id.pass);
         con = findViewById(R.id.confirm);
-        signup = findViewById(R.id.signup);
+        signup = findViewById(R.id.sign_up);
         phone = findViewById(R.id.phone);
         login = findViewById(R.id.login);
         name = findViewById(R.id.name);
-        login_phone = findViewById(R.id.loogin_phone);
         fAuth = FirebaseAuth.getInstance();
         user = fAuth.getCurrentUser();
         if(user!=null){
@@ -120,6 +119,6 @@ public class emailReg extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        //super.onBackPressed();
+        super.onBackPressed();
     }
 }

@@ -99,6 +99,20 @@ public class ProfileEdit extends AppCompatActivity {
             }
         });
 
+        rtdb.child("name").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                name.setText(task.getResult().getValue().toString());
+            }
+        });
+
+        rtdb.child("extra").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                about.setText(task.getResult().getValue().toString());
+            }
+        });
+
         otp_confirm.setVisibility(View.INVISIBLE);
         otp.setVisibility(View.INVISIBLE);
 

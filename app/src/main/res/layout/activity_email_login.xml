@@ -4,62 +4,53 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/green_gradient"
+    android:background="@drawable/greenbg"
     tools:context=".emailLogin">
 
-    <LinearLayout
-        android:id="@+id/linearLayout10"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/email"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout6"
-        app:layout_constraintStart_toStartOf="parent">
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/edit_text_bg_white"
+        android:drawableLeft="@drawable/ic_round_mail_24"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:textAlignment="center"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@+id/pass"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=" Email: "
-            android:textSize="20sp" />
-
-        <EditText
-            android:id="@+id/email"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="enter your email"
-            android:inputType="textEmailAddress"
-            android:textSize="20sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout6"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/pass"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="40dp"
+        android:background="@drawable/edit_text_bg_white"
+        android:drawableLeft="@drawable/ic_baseline_lock_24"
+        android:hint="Password"
+        android:inputType="textEmailAddress"
+        android:textAlignment="center"
+        android:textSize="25sp"
         app:layout_constraintBottom_toTopOf="@+id/login"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=" Password: "
-            android:textSize="20sp" />
-
-        <EditText
-            android:id="@+id/pass"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="enter your password"
-            android:inputType="textPassword"
-            android:textSize="20sp" />
-    </LinearLayout>
 
     <Button
         android:id="@+id/login"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/custom_button"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:background="@drawable/button_login"
+        android:drawableLeft="@drawable/ic_baseline_login_24"
         android:text=" Log in "
         android:textAllCaps="false"
         android:textSize="18sp"
@@ -69,71 +60,28 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-
     <TextView
         android:id="@+id/forgot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Forgot password? Click to reset"
+        android:layout_marginTop="3dp"
+        android:text="Forgot password?"
+        android:textColor="@color/quantum_yellow"
         android:textSize="19sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login"
-        android:textColor="@color/design_default_color_secondary"/>
+        app:layout_constraintEnd_toEndOf="@+id/pass"
+        app:layout_constraintTop_toBottomOf="@+id/pass" />
 
-    <TextView
-        android:id="@+id/phone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Log in with phone number instead"
-        android:textSize="19sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/forgot"
-        android:textColor="@color/design_default_color_secondary"/>
-
-    <TextView
-        android:id="@+id/no_acc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="50dp"
-        android:text="Do not have an account?"
-        android:textSize="17sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/phone" />
     <TextView
         android:id="@+id/sign_up"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Sign up with email"
+        android:layout_marginTop="50dp"
+        android:text="Do not have an account? Sign up"
+        android:textColor="@color/design_default_color_surface"
         android:textSize="19sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/no_acc"
-        android:textColor="@color/design_default_color_secondary"/>
-    <TextView
-        android:id="@+id/sign_up_phone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Sign up with phone number"
-        android:textSize="19sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sign_up"
-        android:textColor="@color/design_default_color_secondary"/>
+        app:layout_constraintTop_toBottomOf="@+id/login" />
 
-    <ImageView
-        android:id="@+id/email_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="150dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout10"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

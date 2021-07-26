@@ -93,66 +93,14 @@ public class profileActivity extends AppCompatActivity {
             login.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                    final View popup = getLayoutInflater().inflate(R.layout.popup_two_option, null);
-
-                    TextView text = popup.findViewById(R.id.text);
-                    Button bt_email = popup.findViewById(R.id.op1);
-                    TextView bt_phone = popup.findViewById(R.id.op2);
-                    bt_email.setText("Email");
-                    bt_phone.setText("Phone");
-                    text.setText("  Log in with:");
-
-                    builder.setView(popup);
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-                    bt_email.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            startActivity(new Intent(getApplicationContext(), emailLogin.class));
-                            dialog.dismiss();
-                        }
-                    });
-                    bt_phone.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            dialog.dismiss();
-                        }
-                    });
+                    startActivity(new Intent(getApplicationContext(), emailLogin.class));
                 }
             });
 
             signup.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                    final View popup = getLayoutInflater().inflate(R.layout.popup_two_option, null);
-
-                    TextView text = popup.findViewById(R.id.text);
-                    Button bt_email = popup.findViewById(R.id.op1);
-                    TextView bt_phone = popup.findViewById(R.id.op2);
-                    bt_email.setText("Email");
-                    bt_phone.setText("Phone");
-                    text.setText("  Sign up with:");
-
-                    builder.setView(popup);
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-                    bt_email.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            startActivity(new Intent(getApplicationContext(), emailReg.class));
-                            dialog.dismiss();
-                        }
-                    });
-                    bt_phone.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            dialog.dismiss();
-                        }
-                    });
+                    startActivity(new Intent(getApplicationContext(), emailReg.class));
                 }
             });
 
@@ -200,7 +148,58 @@ public class profileActivity extends AppCompatActivity {
                 }
             });
 
+
+
+            logout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                    final View popup = getLayoutInflater().inflate(R.layout.popup_two_option, null);
+
+                    TextView text = popup.findViewById(R.id.text);
+                    Button bt_email = popup.findViewById(R.id.op1);
+                    TextView bt_phone = popup.findViewById(R.id.op2);
+                    bt_email.setText("Cancel");
+                    bt_phone.setText("Log out");
+                    text.setText("  Are you sure?");
+
+                    builder.setView(popup);
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                    bt_phone.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            FirebaseAuth.getInstance().signOut();
+                            Intent ri = new Intent(getApplicationContext(), profileActivity.class);
+                            ri.putExtra("last", last);
+                            startActivity(ri);
+                            finish();
+                            dialog.dismiss();
+                        }
+                    });
+                    bt_email.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dialog.dismiss();
+                        }
+                    });
+                }
+            });
+            fav.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getApplicationContext(), listFavs.class);
+                    startActivity(intent);
+                }
+            });
+            reports.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
         }
+
 
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -211,29 +210,7 @@ public class profileActivity extends AppCompatActivity {
                 finish();
             }
         });
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
-                Intent ri = new Intent(getApplicationContext(), profileActivity.class);
-                ri.putExtra("last", last);
-                startActivity(ri);
-                finish();
-            }
-        });
-        fav.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), listFavs.class);
-                startActivity(intent);
-            }
-        });
-        reports.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-            }
-        });
     }
 
 
