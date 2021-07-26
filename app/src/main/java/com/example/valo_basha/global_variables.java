@@ -2,6 +2,8 @@ package com.example.valo_basha;
 
 import android.location.Location;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,4 +21,6 @@ public class global_variables {
     public static boolean list_update = true, idDone = false, cntDone = false;
     public static Filters prev_filter = new Filters();
     public static int id, cnt;
+
+
 }

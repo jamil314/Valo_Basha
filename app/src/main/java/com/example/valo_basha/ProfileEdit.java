@@ -90,8 +90,6 @@ public class ProfileEdit extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if(task.getResult().exists()){
-                    LinearLayout layout = findViewById(R.id.phone_layout);
-                    layout.removeAllViews();
                     confirmPhone.setVisibility(View.INVISIBLE);
                 } else {
                     Log.d("JAMIL", "no number");
@@ -102,14 +100,14 @@ public class ProfileEdit extends AppCompatActivity {
         rtdb.child("name").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                name.setText(task.getResult().getValue().toString());
+                if(task.getResult().exists()) name.setText(task.getResult().getValue().toString());
             }
         });
 
         rtdb.child("extra").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                about.setText(task.getResult().getValue().toString());
+                if(task.getResult().exists()) about.setText(task.getResult().getValue().toString());
             }
         });
 
@@ -175,6 +173,7 @@ public class ProfileEdit extends AppCompatActivity {
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             rtdb.child("propic").setValue("1");
                             Log.d("JAMIL", "Upload successfull");
+                            startActivity(new Intent(getApplicationContext(), confirm_phone.class));
                             finish();
 
                         }
@@ -182,6 +181,7 @@ public class ProfileEdit extends AppCompatActivity {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Log.d("JAMIL", "Upload not successfull");
+                            startActivity(new Intent(getApplicationContext(), confirm_phone.class));
                             finish();
                         }
                     });
@@ -192,7 +192,9 @@ public class ProfileEdit extends AppCompatActivity {
         confirmPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String no = phone.getText().toString();
+                startActivity(new Intent(getApplicationContext(), confirm_phone.class));
+
+               /* String no = phone.getText().toString();
                 if(no.length() == 11) no = "+88"+no;
                 String finalNo = no;
                 PhoneAuthOptions options = PhoneAuthOptions.newBuilder(auth)
@@ -237,7 +239,7 @@ public class ProfileEdit extends AppCompatActivity {
                                 }, 10000);
                             }
                         }).build();
-                PhoneAuthProvider.verifyPhoneNumber(options);
+                PhoneAuthProvider.verifyPhoneNumber(options);*/
             }
         });
 
@@ -336,5 +338,9 @@ public class ProfileEdit extends AppCompatActivity {
         });
     }
 
-
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(getApplicationContext(), confirm_phone.class));
+        finish();
+    }
 }

@@ -99,9 +99,13 @@ public class AddPicture extends AppCompatActivity {
         current.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        "Selected location: current location", Toast.LENGTH_LONG);
+                toast.show();
                 locationPicked = true;
                 global_variables.buildingX = global_variables.user_location.getLatitude();
                 global_variables.buildingY = global_variables.user_location.getLongitude();
+
             }
         });
 

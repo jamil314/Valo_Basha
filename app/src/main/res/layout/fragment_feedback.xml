@@ -17,7 +17,7 @@
         android:ems="10"
         android:gravity="start|top"
         android:inputType="textMultiLine"
-        android:text="Hi, type your feedback here..."
+        android:hint="Hi, type your feedback here..."
         android:maxLines="15"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"

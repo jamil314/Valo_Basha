@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.CubeGrid;
@@ -77,74 +78,73 @@ public class profileActivity extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
         user = fAuth.getCurrentUser();
 
-        if(user == null){
-            stall.setVisibility(View.INVISIBLE);
-            getSupportActionBar().setTitle("Anonymous");
-            propic.setImageResource(R.drawable.anonymous);
-            nullUser.setVisibility(View.VISIBLE);
-            login.setVisibility(View.VISIBLE);
-            signup.setVisibility(View.VISIBLE);
-            edit.setVisibility(View.INVISIBLE);
-            add.setVisibility(View.INVISIBLE);
-            list.setVisibility(View.INVISIBLE);
-            fav.setVisibility(View.INVISIBLE);
-            logout.setVisibility(View.INVISIBLE);
-            reports.setVisibility(View.INVISIBLE);
-            login.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    startActivity(new Intent(getApplicationContext(), emailLogin.class));
-                }
-            });
 
-            signup.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    startActivity(new Intent(getApplicationContext(), emailReg.class));
-                }
-            });
 
-        } else {
-            nullUser.setVisibility(View.INVISIBLE);
-            login.setVisibility(View.INVISIBLE);
-            signup.setVisibility(View.INVISIBLE);
-            edit.setVisibility(View.VISIBLE);
-            add.setVisibility(View.VISIBLE);
-            list.setVisibility(View.VISIBLE);
-            fav.setVisibility(View.VISIBLE);
-            logout.setVisibility(View.VISIBLE);
-            reports.setVisibility(View.VISIBLE);
-            String userId = user.getUid();
 
-            user_info(userId);
+        check_auth_status();
 
-            changePropic(userId);
 
-            Log.d("JAMIL", String.valueOf(user.isEmailVerified()));
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+                startActivity(new Intent(getApplicationContext(), emailLogin.class));
+            }
+        });
+
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+                startActivity(new Intent(getApplicationContext(), emailReg.class));
+            }
+        });
 
             edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(getApplicationContext(), ProfileEdit.class);
                     startActivity(intent);
+                    finish();
                 }
             });
 
             add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(getApplicationContext(), NewDetails.class);
-                    intent.putExtra("last", "profile");
-                    startActivity(intent);
+
+
+                    FirebaseDatabase.getInstance("https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                            .getReference().child("users").child(FirebaseAuth.getInstance().getUid())
+                            .child("phone").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                            if(task.getResult().exists()){
+                                Intent intent = new Intent(getApplicationContext(), NewDetails.class);
+                                intent.putExtra("last", "profile");
+                                startActivity(intent);
+                            } else {
+                                Toast toast = Toast.makeText(getApplicationContext(),
+                                        "Please add your phone number from edit section first", Toast.LENGTH_LONG);
+                                toast.show();
+                            }
+                        }
+                    });
+
+
                 }
             });
 
             list.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
                     Intent intent = new Intent(getApplicationContext(), apartment_list.class);
-                    intent.putExtra("key", userId);
+                    intent.putExtra("key", user.getUid());
                     startActivity(intent);
+
+
+
                 }
             });
 
@@ -198,7 +198,6 @@ public class profileActivity extends AppCompatActivity {
 
                 }
             });
-        }
 
 
         refresh.setOnClickListener(new View.OnClickListener() {
@@ -211,6 +210,41 @@ public class profileActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void check_auth_status() {
+        if(user == null){
+            stall.setVisibility(View.INVISIBLE);
+            getSupportActionBar().setTitle("Anonymous");
+            propic.setImageResource(R.drawable.anonymous);
+            nullUser.setVisibility(View.VISIBLE);
+            login.setVisibility(View.VISIBLE);
+            signup.setVisibility(View.VISIBLE);
+            edit.setVisibility(View.INVISIBLE);
+            add.setVisibility(View.INVISIBLE);
+            list.setVisibility(View.INVISIBLE);
+            fav.setVisibility(View.INVISIBLE);
+            logout.setVisibility(View.INVISIBLE);
+            reports.setVisibility(View.INVISIBLE);
+
+        } else {
+            nullUser.setVisibility(View.INVISIBLE);
+            login.setVisibility(View.INVISIBLE);
+            signup.setVisibility(View.INVISIBLE);
+            edit.setVisibility(View.VISIBLE);
+            add.setVisibility(View.VISIBLE);
+            list.setVisibility(View.VISIBLE);
+            fav.setVisibility(View.VISIBLE);
+            logout.setVisibility(View.VISIBLE);
+            reports.setVisibility(View.VISIBLE);
+            String userId = user.getUid();
+
+            user_info(userId);
+
+            changePropic(userId);
+
+            Log.d("JAMIL", String.valueOf(user.isEmailVerified()));
+        }
     }
 
 
@@ -243,6 +277,7 @@ public class profileActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
 

@@ -139,8 +139,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="You are not logged in. Please log in or sign up"
-        android:textSize="15sp"
+        android:text="  You are not logged in  .\n  Please log in or sign up  "
+        android:textSize="18sp"
+        android:background="@drawable/edit_text_bg_white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout7" />
@@ -149,6 +150,7 @@
         android:id="@+id/linearLayout8"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         app:layout_constraintTop_toBottomOf="@+id/textView6"
         tools:layout_editor_absoluteX="0dp">
 
@@ -161,8 +163,9 @@
             android:id="@+id/sign_in"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Log In"
-            android:textColor="@color/quantum_lightblue"
+            android:background="@drawable/custom_button"
+            android:drawableLeft="@drawable/ic_baseline_login_24"
+            android:text=" Log In "
             android:textSize="20sp" />
 
         <Space
@@ -174,8 +177,9 @@
             android:id="@+id/sign_up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sign up"
-            android:textColor="@color/quantum_lightblue"
+            android:background="@drawable/custom_button"
+            android:text=" Sign up "
+            android:drawableLeft="@drawable/ic_reg"
             android:textSize="20sp" />
 
         <Space
@@ -275,21 +279,24 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="visible">
 
             <Space
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
+
             <Button
                 android:id="@+id/btn_list"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/custom_button"
-                android:text="Apartments"
                 android:drawableTop="@drawable/ic_list"
+                android:text="Apartments"
                 android:textAllCaps="false"
                 android:textSize="15sp" />
+
             <Space
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -300,21 +307,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/custom_button"
-                android:text="Favourites"
                 android:drawableTop="@drawable/ic_favs"
+                android:text="Favourites"
                 android:textAllCaps="false"
                 android:textSize="15sp" />
+
             <Space
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
+
             <Button
                 android:id="@+id/btn_reports"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/custom_button"
-                android:text="Reports"
                 android:drawableTop="@drawable/ic_reports"
+                android:text="Reports"
                 android:textAllCaps="false"
                 android:textSize="15sp" />
 

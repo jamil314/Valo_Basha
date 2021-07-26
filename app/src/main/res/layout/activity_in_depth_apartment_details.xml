@@ -283,8 +283,25 @@
                 android:layout_height="wrap_content">
 
                 <Space
-                    android:layout_width="10dp"
-                    android:layout_height="wrap_content" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="15dp"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/btn_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Prev"
+                    android:textSize="20sp"
+                    android:textAllCaps="false"
+                    android:background="@drawable/custom_button"
+                    android:drawableLeft="@drawable/ic_baseline_arrow_back_24"/>
+
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -292,26 +309,26 @@
                     android:text="Visuals:"
                     android:textSize="20dp" />
 
+
                 <Space
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
 
                 <Button
-                    android:id="@+id/btn_left"
-                    android:layout_width="25dp"
-                    android:layout_height="20dp"
-                    android:background="@drawable/ic_baseline_arrow_back_24" />
+                    android:id="@+id/btn_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Next"
+                    android:textAllCaps="false"
+                    android:textSize="20sp"
+                    android:background="@drawable/custom_button"
+                    android:drawableRight="@drawable/ic_baseline_arrow_forward_24"/>
 
                 <Space
-                    android:layout_width="10dp"
-                    android:layout_height="wrap_content" />
-
-                <Button
-                    android:id="@+id/btn_right"
-                    android:layout_width="25dp"
-                    android:layout_height="20dp"
-                    android:background="@drawable/ic_baseline_arrow_forward_24" />
+                    android:layout_width="15dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
 
                 <Space
                     android:layout_width="10dp"
@@ -338,7 +355,7 @@
                     android:id="@+id/image_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:srcCompat="@drawable/apartment_entrance" />
+                    app:srcCompat="@drawable/unavailable_image" />
 
                 <ProgressBar
                     android:id="@+id/wait_progress"

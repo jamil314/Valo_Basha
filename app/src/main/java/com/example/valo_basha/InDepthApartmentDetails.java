@@ -61,7 +61,6 @@ public class InDepthApartmentDetails extends AppCompatActivity {
     ImageView imageView, propic;
     LinearLayout imagelist;
     Apartment apartment;
-    int images[] = new int[7];
     ArrayList<Bitmap> bitmaps = new ArrayList<>();
     String key;
     ProgressBar progressBar, stall;
@@ -346,17 +345,10 @@ public class InDepthApartmentDetails extends AppCompatActivity {
         copy = findViewById(R.id.btn_copy);
         call = findViewById(R.id.btn_call);
         imageView = findViewById(R.id.image_view);
-        images[0] = R.drawable.apartment_entrance;
-        images[1] = R.drawable.apartment_with_furniture;
-        images[2] = R.drawable.apartment_with_furniture_2;
-        images[3] = R.drawable.apartment_with_furniture_3;
-        images[4] = R.drawable.apartment_empty;
-        images[5] = R.drawable.apartment_empty_2;
-        images[6] = R.drawable.apartment_view;
         n = apartment.image_count;
         final int[] ct = {1};
         if(n==0){
-            load.setVisibility(View.INVISIBLE);
+            load.setText("No image given");
             progressBar.setVisibility(View.INVISIBLE);
         } else load.setText("Image loading "+ ct[0] +"/"+n+"\nPlease wait");
         for(int ii= 1; ii<=n; ii++){

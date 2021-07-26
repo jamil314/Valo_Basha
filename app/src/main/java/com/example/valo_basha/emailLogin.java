@@ -68,7 +68,7 @@ public class emailLogin extends AppCompatActivity {
                         if(task.isSuccessful()){
                             Log.d("JAMIL", "Login Successfull");
                             Toast.makeText(emailLogin.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
-                            //startActivity(new Intent(emailLogin.this, profileActivity.class));
+                            startActivity(new Intent(emailLogin.this, profileActivity.class));
                             finish();
                         }
                         else{
@@ -85,16 +85,19 @@ public class emailLogin extends AppCompatActivity {
         forgot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final EditText resetMail = new EditText(view.getContext());
-                final AlertDialog.Builder passwordResetDialog = new AlertDialog.Builder(view.getContext());
-                passwordResetDialog.setTitle("Reset Password ?");
-                passwordResetDialog.setMessage("Enter Your Email To Received Reset Link.");
-                passwordResetDialog.setView(resetMail);
-                passwordResetDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                final View popup = getLayoutInflater().inflate(R.layout.popup_pw_reset, null);
+                EditText text = popup.findViewById(R.id.email);
+                Button bt_email = popup.findViewById(R.id.op1);
+                TextView bt_phone = popup.findViewById(R.id.op2);
+
+                builder.setView(popup);
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                bt_phone.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // extract the email and send reset link
-                        String mail = resetMail.getText().toString();
+                    public void onClick(View view) {
+                        String mail = text.getText().toString();
                         fAuth.sendPasswordResetEmail(mail).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
@@ -106,18 +109,16 @@ public class emailLogin extends AppCompatActivity {
                                 Toast.makeText(emailLogin.this, "Error ! Reset Link is Not Sent" + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
-
+                        dialog.dismiss();
                     }
                 });
-
-                passwordResetDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                bt_email.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // close the dialog
+                    public void onClick(View view) {
+                        dialog.dismiss();
                     }
                 });
 
-                passwordResetDialog.create().show();
             }
         });
         signup.setOnClickListener(new View.OnClickListener() {
@@ -128,4 +129,12 @@ public class emailLogin extends AppCompatActivity {
             }
         });
     }
+
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(emailLogin.this, profileActivity.class));
+        finish();
+    }
+
 }

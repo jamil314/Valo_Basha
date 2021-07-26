@@ -88,6 +88,7 @@ public class emailReg extends AppCompatActivity {
                                             .getReference().child("users").child(uid);
                                     mDatabase.child("email").setValue(Email);
                                     mDatabase.child("name").setValue(Name);
+                                    startActivity(new Intent(emailReg.this, profileActivity.class));
                                     finish();
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
@@ -119,6 +120,7 @@ public class emailReg extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        startActivity(new Intent(emailReg.this, profileActivity.class));
+        finish();
     }
 }
