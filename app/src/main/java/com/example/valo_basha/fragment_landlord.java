@@ -73,49 +73,17 @@ public class fragment_landlord extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_landlord, container, false);
-       /* building_name = (EditText) view.findViewById(R.id.building_name);
-        name = (EditText) view.findViewById(R.id.name);
-        phn_no = (EditText) view.findViewById(R.id.phn_no);
-        otp = view.findViewById(R.id.otp);
-        msg = view.findViewById(R.id.msg);
-        proceed = view.findViewById(R.id.btn_proceed);
-        confirm = view.findViewById(R.id.btn_otp);
-        list = view.findViewById(R.id.btn_list);
-
-        proceed.setOnClickListener(new View.OnClickListener() {
+        Button share = view.findViewById(R.id.share);
+        share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                otp.setVisibility(View.VISIBLE);
-                confirm.setVisibility(View.VISIBLE);
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("tex/plain");
+                intent.putExtra(Intent.EXTRA_SUBJECT, "CCC Course App");
+                intent.putExtra(Intent.EXTRA_TEXT, "https://github.com/jamil314/Valo_Basha/blob/master/app-debug.apk");
+                startActivity(Intent.createChooser(intent, "Share using"));
             }
         });
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //msg.setVisibility(View.VISIBLE);
-                Apartment apartment = new Apartment();
-                apartment.name = building_name.getText().toString();
-                apartment.owner = name.getText().toString();
-                apartment.contactInfo = phn_no.getText().toString();
-                Intent intent = new Intent(getActivity(), NewDetails.class);
-                Log.d("JAMIL", "created intent");
-                intent.putExtra("apartment", (Parcelable) apartment);
-                Log.d("JAMIL", "sent value to intent");
-                startActivity(intent);
-            }
-        });
-
-
-        list.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), apartment_list.class);
-                intent.putExtra("key", "Default owner");
-                startActivity(intent);
-            }
-        });
-*/
-
         return view;
     }
 }

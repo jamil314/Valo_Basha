@@ -21,7 +21,7 @@
     <fragment
         android:id="@+id/nav_share"
         android:name="com.example.valo_basha.fragment_landlord"
-        android:label="Become a landlord"
+        android:label="Share / Rate us"
         tools:layout="@layout/fragment_landlord" />
 
     <fragment

@@ -51,11 +51,7 @@
                 <item
                     android:id="@+id/nav_share"
                     android:icon="@drawable/logo_share"
-                    android:title="Share" />
-                <item
-                    android:id="@+id/nav_rate_us"
-                    android:icon="@drawable/logo_rate_us"
-                    android:title="Rate Us" />
+                    android:title="Share / Rate us" />
                 <item
                     android:id="@+id/nav_developers"
                     android:icon="@drawable/devs"

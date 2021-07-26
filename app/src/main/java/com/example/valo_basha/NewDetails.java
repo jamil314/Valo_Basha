@@ -42,7 +42,7 @@ public class NewDetails extends AppCompatActivity {
     EditText t_floors, rent, area, name, extra;
     CheckBox furniture;
     LinearLayout layoutlist;
-    Button add, gallery, camera, proceed;
+    Button add, gallery, camera, proceed, discard;
     Apartment apartment;
     String last;
     FirebaseUser user;
@@ -91,6 +91,7 @@ public class NewDetails extends AppCompatActivity {
         add = findViewById(R.id.add_floors);
         name = findViewById(R.id.name);
         extra = findViewById(R.id.extra);
+        discard = findViewById(R.id.btn_discard);
         proceed = findViewById(R.id.btn_proceed_to_place);
         skbed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -163,6 +164,13 @@ public class NewDetails extends AppCompatActivity {
                     finish();
                 }
 
+            }
+        });
+
+        discard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
             }
         });
     }

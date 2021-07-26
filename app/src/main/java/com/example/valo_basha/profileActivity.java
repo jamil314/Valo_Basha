@@ -195,6 +195,8 @@ public class profileActivity extends AppCompatActivity {
             reports.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Intent intent = new Intent(getApplicationContext(), listReport.class);
+                    startActivity(intent);
 
                 }
             });

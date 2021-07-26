@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -97,7 +98,10 @@ public class Report_activity extends AppCompatActivity {
                     mDatabase = FirebaseDatabase.getInstance("https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app/")
                             .getReference().child("Reports");
                     Log.d("JAMIL", String.valueOf(mDatabase));
-                    mDatabase.push().setValue(report);
+                    DatabaseReference ref =  mDatabase.push();
+                    ref.setValue(report);
+                    FirebaseDatabase.getInstance("https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                            .getReference().child("users").child(user.getUid()).child("reports").child(ref.getKey()).setValue(ref.getKey());
 
                     Toast toast = Toast.makeText(getApplicationContext(),
                             "Your report has been recorded\nThanks for bringing it to our attention", Toast.LENGTH_LONG);
