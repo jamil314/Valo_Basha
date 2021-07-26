@@ -340,7 +340,7 @@ public class ProfileEdit extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(getApplicationContext(), confirm_phone.class));
+        startActivity(new Intent(getApplicationContext(), profileActivity.class));
         finish();
     }
 }
