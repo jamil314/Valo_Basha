@@ -1,6 +1,7 @@
 package com.example.valo_basha;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("JAMIL", "MainActivity -> onCreate");
-
+        FirebaseAuth.getInstance().signOut();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -102,7 +103,18 @@ public class MainActivity extends AppCompatActivity {
         Log.d("JAMIL", "MainActivity -> onCreateOptionMenu");
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.addAuthStateListener( new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                Log.d("JAMIL", "MainActivity onAuthStateChange");
+                FirebaseUser fuser = firebaseAuth.getCurrentUser();
+                if(fuser!=null){
+                    changeIcon(fuser.getUid(), menu.getItem(0));
+                } else menu.getItem(0).setIcon(R.drawable.anonymous);
+            }
+        });
+        FirebaseUser user = auth.getCurrentUser();
         if(user!=null){
             changeIcon(user.getUid(), menu.getItem(0));
         }
@@ -128,9 +140,7 @@ public class MainActivity extends AppCompatActivity {
         mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if(task.getResult().getValue().toString().equals("0")){
-
-                } else {
+                if(task.getResult().exists()){
                     Log.d("JAMIL", "Photo download request sent");
                     String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                     StorageReference storage = FirebaseStorage.getInstance().getReference().child("propics").child(uid);
@@ -153,6 +163,8 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
+                } else {
+                    item.setIcon(R.drawable.anonymous);
                 }
             }
         });

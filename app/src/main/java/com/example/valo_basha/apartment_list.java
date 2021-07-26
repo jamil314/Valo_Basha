@@ -73,9 +73,9 @@ public class apartment_list extends AppCompatActivity {
             mDatabase.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    apartmentList.removeAllViews();
                     for(DataSnapshot dataSnapshot:snapshot.getChildren()){
                         String id = String.valueOf(dataSnapshot.getValue());
-                        Log.d("JAMIL", "Here: "+id);
                         DatabaseReference mDatabase2;
                         mDatabase2 = FirebaseDatabase.getInstance("https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app/")
                                 .getReference().child("ads").child(id);
@@ -123,7 +123,6 @@ public class apartment_list extends AppCompatActivity {
                 i.putExtra("key", key);
                 Log.d("JAMIL", "passed data successfully");
                 startActivity(i);
-                if(!key.equals("tenent")) apartmentList.removeAllViews();
             }
         });
         apartmentList.addView(v);

@@ -43,7 +43,7 @@ import java.util.Date;
 
 public class profileActivity extends AppCompatActivity {
 
-    Button refresh, edit, add, list, fav, logout;
+    Button refresh, edit, add, list, fav, logout, reports;
     TextView name, email, phone, about, nullUser, login, signup;
     ImageView propic;
     FirebaseAuth fAuth;
@@ -73,6 +73,7 @@ public class profileActivity extends AppCompatActivity {
         refresh = findViewById(R.id.btn_refresh);
         logout = findViewById(R.id.btn_logout);
         propic = findViewById(R.id.profile_pic);
+        reports = findViewById(R.id.btn_reports);
         fAuth = FirebaseAuth.getInstance();
         user = fAuth.getCurrentUser();
 
@@ -88,6 +89,7 @@ public class profileActivity extends AppCompatActivity {
             list.setVisibility(View.INVISIBLE);
             fav.setVisibility(View.INVISIBLE);
             logout.setVisibility(View.INVISIBLE);
+            reports.setVisibility(View.INVISIBLE);
             login.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -163,6 +165,7 @@ public class profileActivity extends AppCompatActivity {
             list.setVisibility(View.VISIBLE);
             fav.setVisibility(View.VISIBLE);
             logout.setVisibility(View.VISIBLE);
+            reports.setVisibility(View.VISIBLE);
             String userId = user.getUid();
 
             user_info(userId);
@@ -175,11 +178,6 @@ public class profileActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(getApplicationContext(), ProfileEdit.class);
-                    intent.putExtra("name", name.getText());
-                    intent.putExtra("phone", phone.getText());
-                    intent.putExtra("email", email.getText());
-                    intent.putExtra("about", about.getText());
-                    intent.putExtra("id", userId);
                     startActivity(intent);
                 }
             });
@@ -221,6 +219,19 @@ public class profileActivity extends AppCompatActivity {
                 ri.putExtra("last", last);
                 startActivity(ri);
                 finish();
+            }
+        });
+        fav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), listFavs.class);
+                startActivity(intent);
+            }
+        });
+        reports.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
     }
@@ -265,8 +276,9 @@ public class profileActivity extends AppCompatActivity {
         mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if(task.getResult().getValue().toString().equals("0")){
+                if(!task.getResult().exists()){
                     propic.setImageResource(R.drawable.anonymous);
+                    stall.setVisibility(View.INVISIBLE);
                 } else {
                     Log.d("JAMIL", "Photo download request sent");
                     String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());

@@ -35,6 +35,7 @@ public class emailLogin extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email_login);
+        getSupportActionBar().setTitle("Log in with Email");
         email = findViewById(R.id.email);
         pass = findViewById(R.id.pass);
         login = findViewById(R.id.login);

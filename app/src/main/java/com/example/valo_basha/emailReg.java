@@ -33,6 +33,7 @@ public class emailReg extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email_reg);
+        getSupportActionBar().setTitle("Sign up with Email");
         email = findViewById(R.id.email);
         pass = findViewById(R.id.pass);
         con = findViewById(R.id.confirm);
@@ -68,12 +69,15 @@ public class emailReg extends AppCompatActivity {
                     return;
                 }
                 Log.d("JAMIL", "Reg req sent");
+                fAuth = FirebaseAuth.getInstance();
                 fAuth.createUserWithEmailAndPassword(Email, Pass).addOnCompleteListener(emailReg.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d("JAMIL", "tsk completed");
                         if(task.isSuccessful()){
+                            Log.d("JAMIL", "successfull");
                             FirebaseUser fUser = fAuth.getCurrentUser();
+                            Log.d("JAMIL", fUser.getUid());
                             fUser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
@@ -85,7 +89,6 @@ public class emailReg extends AppCompatActivity {
                                             .getReference().child("users").child(uid);
                                     mDatabase.child("email").setValue(Email);
                                     mDatabase.child("name").setValue(Name);
-                                    mDatabase.child("propic").setValue("0");
                                     finish();
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
@@ -104,7 +107,6 @@ public class emailReg extends AppCompatActivity {
                 });
             }
         });
-
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -114,5 +116,10 @@ public class emailReg extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
     }
 }

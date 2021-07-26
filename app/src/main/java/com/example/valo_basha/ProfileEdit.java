@@ -16,19 +16,29 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthOptions;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -41,41 +51,57 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class ProfileEdit extends AppCompatActivity {
     TextView editPropic, confirmPhone;
     ImageView propic;
-    EditText name, email, phone, about;
-    String uid, lastPhone="-";
+    EditText name, phone, about, otp;
+    String uid;
     String currentPhotoPath;
     boolean upload = false;
     Uri uri;
-    Button confirm;
+    Button confirm, otp_confirm;
     DatabaseReference rtdb;
+    FirebaseAuth auth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_edit);
+        Log.d("JAMIL", "editing");
+        auth = FirebaseAuth.getInstance();
         editPropic = findViewById(R.id.change_profile_pic);
         propic = findViewById(R.id.profile_pic);
         name = findViewById(R.id.name);
-        email = findViewById(R.id.email);
         phone = findViewById(R.id.phone);
+        confirmPhone = findViewById(R.id.change_phone);
+        otp = findViewById(R.id.otp);
+        otp_confirm = findViewById(R.id.otp_confirm);
         about = findViewById(R.id.about);
-        Intent Cintent = getIntent();
-        name.setText(Cintent.getStringExtra("name"));
-        lastPhone = Cintent.getStringExtra("phone");
-        email.setText(Cintent.getStringExtra("email"));
-        about.setText(Cintent.getStringExtra("about"));
-        uid = Cintent.getStringExtra("id");
-        phone.setText(lastPhone);
         editPropic = findViewById(R.id.change_profile_pic);
         propic = findViewById(R.id.profile_pic);
         confirm = findViewById(R.id.confirm);
+        uid = auth.getUid();
         rtdb = FirebaseDatabase.getInstance("https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app/")
                 .getReference().child("users").child(uid);
-
+        Log.d("JAMIL", rtdb.toString());
         changePropic(uid);
+        rtdb.child("phone").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.getResult().exists()){
+                    LinearLayout layout = findViewById(R.id.phone_layout);
+                    layout.removeAllViews();
+                    confirmPhone.setVisibility(View.INVISIBLE);
+                } else {
+                    Log.d("JAMIL", "no number");
+                }
+            }
+        });
+
+        otp_confirm.setVisibility(View.INVISIBLE);
+        otp.setVisibility(View.INVISIBLE);
+
         editPropic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,7 +118,7 @@ public class ProfileEdit extends AppCompatActivity {
                 remove.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        rtdb.child("propic").setValue("0");
+                        rtdb.child("propic").removeValue();
                         propic.setImageResource(R.drawable.anonymous);
                         upload = false;
 
@@ -125,9 +151,8 @@ public class ProfileEdit extends AppCompatActivity {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                rtdb.child("phone").setValue(phone.getText().toString());
+                rtdb.child("name").setValue(name.getText().toString());
                 rtdb.child("extra").setValue(about.getText().toString());
-                Log.d("JAMIL", rtdb.toString());
                 if(upload){
                     FirebaseStorage storage =FirebaseStorage.getInstance();
                     StorageReference ref = storage.getReference("propics").child(uid);
@@ -147,6 +172,58 @@ public class ProfileEdit extends AppCompatActivity {
                         }
                     });
                 } else finish();
+            }
+        });
+
+        confirmPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String no = phone.getText().toString();
+                if(no.length() == 11) no = "+88"+no;
+                String finalNo = no;
+                PhoneAuthOptions options = PhoneAuthOptions.newBuilder(auth)
+                        .setPhoneNumber(no).setTimeout(60L, TimeUnit.SECONDS)
+                        .setActivity(ProfileEdit.this).setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                            @Override
+                            public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
+                                Toast toast = Toast.makeText(getApplicationContext(),
+                                        "Phone verification successful", Toast.LENGTH_LONG);
+                                toast.show();
+                                LinearLayout layout = findViewById(R.id.phone_layout);
+                                layout.removeAllViews();
+                                confirmPhone.setVisibility(View.INVISIBLE);
+                                rtdb.child("phone").setValue(finalNo);
+                            }
+
+                            @Override
+                            public void onVerificationFailed(@NonNull FirebaseException e) {
+                                Toast toast = Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG);
+                                toast.show();
+                            }
+
+                            @Override
+                            public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                                super.onCodeSent(s, forceResendingToken);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        otp.setVisibility(View.VISIBLE);
+                                        otp_confirm.setVisibility(View.VISIBLE);
+                                        String OTP = otp.getText().toString();
+                                        if(otp.equals(s)) {
+                                            Toast toast = Toast.makeText(getApplicationContext(),
+                                                    "Phone verification successful", Toast.LENGTH_LONG);
+                                            toast.show();
+                                            LinearLayout layout = findViewById(R.id.phone_layout);
+                                            layout.removeAllViews();
+                                            confirmPhone.setVisibility(View.INVISIBLE);
+                                            rtdb.child("phone").setValue(finalNo);
+                                        }
+                                    }
+                                }, 10000);
+                            }
+                        }).build();
+                PhoneAuthProvider.verifyPhoneNumber(options);
             }
         });
 
@@ -214,7 +291,7 @@ public class ProfileEdit extends AppCompatActivity {
         mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if(task.getResult().getValue().toString().equals("0")){
+                if(!task.getResult().exists()){
                     propic.setImageResource(R.drawable.anonymous);
                 } else {
                     Log.d("JAMIL", "Photo download request sent");

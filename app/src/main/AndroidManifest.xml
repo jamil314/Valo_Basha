@@ -22,7 +22,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ProfileEdit"></activity>
+        <activity android:name=".phoneReg"></activity>
+        <activity android:name=".listInterested" />
+        <activity android:name=".listReports" />
+        <activity android:name=".listFavs" />
+        <activity android:name=".ProfileEdit" />
         <activity android:name=".emailReg" />
         <activity android:name=".emailLogin" />
         <activity android:name=".profileActivity" />

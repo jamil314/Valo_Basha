@@ -126,7 +126,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signup"
-        android:textColor="@color/quantum_yellow"/>
+        android:textColor="@color/design_default_color_secondary"/>
 
     <TextView
         android:id="@+id/no_acc"
@@ -148,7 +148,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/no_acc"
-        android:textColor="@color/quantum_lightblue"/>
+        android:textColor="@color/design_default_color_secondary"/>
     <TextView
         android:id="@+id/loogin_phone"
         android:layout_width="wrap_content"
@@ -159,6 +159,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login"
-        android:textColor="@color/quantum_lightblue"/>
+        android:textColor="@color/design_default_color_secondary"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

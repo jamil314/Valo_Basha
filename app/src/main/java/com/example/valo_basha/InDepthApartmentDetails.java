@@ -76,10 +76,11 @@ public class InDepthApartmentDetails extends AppCompatActivity {
         inflater.inflate(R.menu.custom_manu, menu);
         if(!key.equals("tenent")) {
             menu.getItem(0).setVisible(false);
-            menu.getItem(1).setVisible(false);
+            menu.getItem(2).setVisible(false);
         }
         else{
-            menu.getItem(2).setVisible(false);
+            menu.getItem(1).setVisible(false);
+            menu.getItem(3).setVisible(false);
 
             user = FirebaseAuth.getInstance().getCurrentUser();
             if(user == null){
@@ -141,12 +142,27 @@ public class InDepthApartmentDetails extends AppCompatActivity {
                             if(task.getResult().exists()) {
                                 item.setIcon(R.drawable.ic_fav_false);
                                 mDatabase.removeValue();
+
+
+                                DatabaseReference mDatabase2;
+                                mDatabase2 = FirebaseDatabase.getInstance("https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                                        .getReference().child("favourites").child(String.valueOf(apartment.id)).child(user.getUid());
+                                mDatabase2.removeValue();
+
+
                                 Toast toast = Toast.makeText(getApplicationContext(),
                                         "Removed from favourites", Toast.LENGTH_LONG);
                                 toast.show();
                             } else {
                                 item.setIcon(R.drawable.ic_fav_true);
                                 mDatabase.setValue(apartment.id);
+
+                                DatabaseReference mDatabase2;
+                                mDatabase2 = FirebaseDatabase.getInstance("https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                                        .getReference().child("favourites").child(String.valueOf(apartment.id)).child(user.getUid());
+                                mDatabase2.setValue(user.getUid());
+
+
                                 Toast toast = Toast.makeText(getApplicationContext(),
                                         "Added to favourites", Toast.LENGTH_LONG);
                                 toast.show();
@@ -189,47 +205,40 @@ public class InDepthApartmentDetails extends AppCompatActivity {
                 });
 
                 break;
-        }/*
-        if(key.equals("tenent")) {
-            Log.d("JAMIL", apartment.name);
-            Intent ri = new Intent(getApplicationContext(), Report_activity.class);
-            ri.putExtra("id", apartment.id);
-            startActivity(ri);
-        } else {
-            Log.d("JAMIL", "delete "+apartment.name);
 
+            case R.id.btn_int_list:
+                Intent li = new Intent(getApplicationContext(), listInterested.class);
+                li.putExtra("id", String.valueOf(apartment.id));
+                startActivity(li);
+                break;
+        }
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(InDepthApartmentDetails.this);
-            final View popup = getLayoutInflater().inflate(R.layout.popup_two_option, null);
-
-            TextView text = popup.findViewById(R.id.text);
-            Button yes = popup.findViewById(R.id.op1);
-            TextView no = popup.findViewById(R.id.op2);
-            yes.setText("Delete");
-            no.setText("Cancel");
-            text.setText("  Are you sure?");
-
-            builder.setView(popup);
-            AlertDialog dialog = builder.create();
-            dialog.show();
-            yes.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    delete();
-                    dialog.dismiss();
-                }
-            });
-            no.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
-                }
-            });
-        }*/
         return true;
     }
 
     private void delete() {
+        DatabaseReference mDatabase3 = FirebaseDatabase.getInstance("https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                .getReference().child("favourites").child(String.valueOf(apartment.id));
+        mDatabase3.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot:snapshot.getChildren()){
+                    String likedBy = String.valueOf(dataSnapshot.getValue());
+                    DatabaseReference mDatabase4 = FirebaseDatabase.getInstance("https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                            .getReference().child("users").child(likedBy).child("fav_list").child(String.valueOf(apartment.id));
+                    mDatabase4.removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        mDatabase3.removeValue();
+
+
+
         Toast toast = Toast.makeText(getApplicationContext(), "Deleted Successfully", Toast.LENGTH_LONG);
         toast.show();
         DatabaseReference mDatabase;
@@ -469,8 +478,9 @@ public class InDepthApartmentDetails extends AppCompatActivity {
         mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if(task.getResult().getValue().toString().equals("0")){
+                if(!task.getResult().exists()){
                     propic.setImageResource(R.drawable.anonymous);
+                    stall.setVisibility(View.INVISIBLE);
                 } else {
                     Log.d("JAMIL", "Photo download request sent");
                     String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
