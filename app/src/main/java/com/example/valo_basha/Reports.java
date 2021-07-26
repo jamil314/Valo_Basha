@@ -1,7 +1,7 @@
 package com.example.valo_basha;
 
 public class Reports {
-    String name="anonymous", contact="", report="";
+    String name="anonymous", contact="", report="", uid;
     int building_id;
 
     public String getName() {
@@ -30,6 +30,14 @@ public class Reports {
 
     public int getBuilding_id() {
         return building_id;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public void setBuilding_id(int building_id) {

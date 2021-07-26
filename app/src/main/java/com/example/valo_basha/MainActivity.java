@@ -1,7 +1,11 @@
 package com.example.valo_basha;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -25,11 +29,20 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -46,7 +59,10 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -57,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("JAMIL", "MainActivity -> onCreate");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -79,14 +96,67 @@ public class MainActivity extends AppCompatActivity {
         //selectItem(1);
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         Log.d("JAMIL", "MainActivity -> onCreateOptionMenu");
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user!=null){
+            changeIcon(user.getUid(), menu.getItem(0));
+        }
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_profile:
+                Intent ri = new Intent(MainActivity.this, profileActivity.class);
+                ri.putExtra("last", "main");
+                startActivity(ri);
+                break;
+        }
+        return true;
+    }
+
+    private void changeIcon(String uid, MenuItem item) {
+        DatabaseReference mDatabase;
+        mDatabase = FirebaseDatabase.getInstance("https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                .getReference().child("users").child(uid).child("propic");
+        mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.getResult().getValue().toString().equals("0")){
+
+                } else {
+                    Log.d("JAMIL", "Photo download request sent");
+                    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                    StorageReference storage = FirebaseStorage.getInstance().getReference().child("propics").child(uid);
+                    try {
+                        final File file = File.createTempFile(timeStamp, uid);
+                        storage.getFile(file).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                Log.d("JAMIL", "Photo download successful");
+                                Bitmap bt = BitmapFactory.decodeFile(file.getAbsolutePath());
+                                item.setIcon(new BitmapDrawable(getResources(), bt));
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d("JAMIL", "Photo download failed:"+e);
+                            }
+                        });
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        });
+    }
     @Override
     public boolean onSupportNavigateUp() {
         Log.d("JAMIL", "MainActivity -> onSupportNavigateUp");

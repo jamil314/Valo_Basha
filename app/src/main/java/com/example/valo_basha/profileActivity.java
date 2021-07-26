@@ -49,11 +49,15 @@ public class profileActivity extends AppCompatActivity {
     FirebaseAuth fAuth;
     FirebaseUser user;
     ProgressBar stall, progressBar;
+    String last;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_profile);
+        Intent intent = getIntent();
+        last = intent.getStringExtra("last");
+        Log.d("JAMIL", "From: "+last);
+
         stall = findViewById(R.id.stall);
         name = findViewById(R.id.name);
         email = findViewById(R.id.email);
@@ -184,9 +188,7 @@ public class profileActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(getApplicationContext(), NewDetails.class);
-                    intent.putExtra("name", name.getText());
-                    intent.putExtra("phone", phone.getText());
-                    intent.putExtra("id", userId);
+                    intent.putExtra("last", "profile");
                     startActivity(intent);
                 }
             });
@@ -205,14 +207,20 @@ public class profileActivity extends AppCompatActivity {
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                recreate();
+                Intent ri = new Intent(getApplicationContext(), profileActivity.class);
+                ri.putExtra("last", last);
+                startActivity(ri);
+                finish();
             }
         });
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
-                recreate();
+                Intent ri = new Intent(getApplicationContext(), profileActivity.class);
+                ri.putExtra("last", last);
+                startActivity(ri);
+                finish();
             }
         });
     }
@@ -220,8 +228,12 @@ public class profileActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-        finish();
+        if(last.equals("skip")) {
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            finish();
+        } else {
+            finish();
+        }
     }
 
     void user_info(String uid){

@@ -36,6 +36,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -64,17 +66,130 @@ public class InDepthApartmentDetails extends AppCompatActivity {
     String key;
     ProgressBar progressBar, stall;
     TextView load, name, email, phone, about;
+    boolean isFav = false;
+    DatabaseReference mDatabase;
+    FirebaseUser user;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.custom_manu, menu);
-        if(!key.equals("tenent")) menu.getItem(0).setTitle("Delete");
+        if(!key.equals("tenent")) {
+            menu.getItem(0).setVisible(false);
+            menu.getItem(1).setVisible(false);
+        }
+        else{
+            menu.getItem(2).setVisible(false);
+
+            user = FirebaseAuth.getInstance().getCurrentUser();
+            if(user == null){
+
+            } else {
+                mDatabase = FirebaseDatabase.getInstance("https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                        .getReference().child("users").child(user.getUid()).child("fav_list").child(String.valueOf(apartment.id));
+                mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if (task.getResult().exists())
+                            menu.getItem(0).setIcon(R.drawable.ic_fav_true);
+                    }
+                });
+            }
+        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.btn_fav:
+                user = FirebaseAuth.getInstance().getCurrentUser();
+                if(user == null){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(InDepthApartmentDetails.this);
+                    final View popup = getLayoutInflater().inflate(R.layout.popup_two_option, null);
+
+                    TextView text = popup.findViewById(R.id.text);
+                    Button yes = popup.findViewById(R.id.op1);
+                    TextView no = popup.findViewById(R.id.op2);
+                    yes.setText("Yes");
+                    no.setText("No");
+                    text.setText("You need to be logged in before you can add/remove favourites.\n  Do you want to log in?");
+
+                    builder.setView(popup);
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                    yes.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent ri = new Intent(getApplicationContext(), profileActivity.class);
+                            startActivity(ri);
+                            dialog.dismiss();
+                        }
+                    });
+                    no.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dialog.dismiss();
+                        }
+                    });
+                } else {
+                    mDatabase = FirebaseDatabase.getInstance("https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                            .getReference().child("users").child(user.getUid()).child("fav_list").child(String.valueOf(apartment.id));
+                    mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                            if(task.getResult().exists()) {
+                                item.setIcon(R.drawable.ic_fav_false);
+                                mDatabase.removeValue();
+                                Toast toast = Toast.makeText(getApplicationContext(),
+                                        "Removed from favourites", Toast.LENGTH_LONG);
+                                toast.show();
+                            } else {
+                                item.setIcon(R.drawable.ic_fav_true);
+                                mDatabase.setValue(apartment.id);
+                                Toast toast = Toast.makeText(getApplicationContext(),
+                                        "Added to favourites", Toast.LENGTH_LONG);
+                                toast.show();
+                            }
+                        }
+                    });
+                }
+                break;
+            case R.id.btn_report:
+                Intent ri = new Intent(getApplicationContext(), Report_activity.class);
+                ri.putExtra("id", apartment.id);
+                startActivity(ri);
+                break;
+            case R.id.btn_remove:
+                AlertDialog.Builder builder = new AlertDialog.Builder(InDepthApartmentDetails.this);
+                final View popup = getLayoutInflater().inflate(R.layout.popup_two_option, null);
+
+                TextView text = popup.findViewById(R.id.text);
+                Button yes = popup.findViewById(R.id.op1);
+                TextView no = popup.findViewById(R.id.op2);
+                yes.setText("Delete");
+                no.setText("Cancel");
+                text.setText("Are you sure?");
+
+                builder.setView(popup);
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                yes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        delete();
+                        dialog.dismiss();
+                    }
+                });
+                no.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+
+                break;
+        }/*
         if(key.equals("tenent")) {
             Log.d("JAMIL", apartment.name);
             Intent ri = new Intent(getApplicationContext(), Report_activity.class);
@@ -110,7 +225,7 @@ public class InDepthApartmentDetails extends AppCompatActivity {
                     dialog.dismiss();
                 }
             });
-        }
+        }*/
         return true;
     }
 
@@ -121,18 +236,31 @@ public class InDepthApartmentDetails extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance("https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app/").
                 getReference();
 
-        mDatabase.child("ads").child(String.valueOf(apartment.id)).removeValue();
-        mDatabase.child("users").child(apartment.uid).child("apartment")
-                .child(String.valueOf(apartment.id)).removeValue();
+        mDatabase.child("ads").child(String.valueOf(apartment.id)).removeValue()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Log.d("JAMIL", "removed 1");
+                mDatabase.child("users").child(apartment.uid).child("apartment")
+                        .child(String.valueOf(apartment.id)).removeValue()
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.d("JAMIL", "removed 2");
+                        global_variables.cnt--;
+                        mDatabase.child("mandatory_info").child("count").setValue(global_variables.cnt)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull  Task<Void> task) {
+                                Log.d("JAMIL", "removed 3");
+                                finish();
+                            }
+                        });
+                    }
+                });
+            }
+        });
 
-        global_variables.cnt--;
-        mDatabase.child("mandatory_info").child("count").setValue(global_variables.cnt);
-        try {
-            wait(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        finish();
     }
 
     @Override
@@ -218,7 +346,10 @@ public class InDepthApartmentDetails extends AppCompatActivity {
         images[6] = R.drawable.apartment_view;
         n = apartment.image_count;
         final int[] ct = {1};
-        load.setText("Image loading "+ ct[0] +"/"+n+"\nPlease wait");
+        if(n==0){
+            load.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+        } else load.setText("Image loading "+ ct[0] +"/"+n+"\nPlease wait");
         for(int ii= 1; ii<=n; ii++){
             Log.d("JAMIL", "Download requested: "+ii);
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());

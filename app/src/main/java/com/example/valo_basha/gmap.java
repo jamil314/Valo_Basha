@@ -88,6 +88,7 @@ public class gmap extends Fragment {
             if(global_variables.flag) sylhet = new LatLng(global_variables.user_location.getLatitude(), global_variables.user_location.getLongitude());
             marker = gMap.addMarker(new MarkerOptions().position(sylhet).title("You are here!!").snippet("-1"));
             if(global_variables.BuildingStatus == 3) {
+                marker.setIcon(bitmapDescriptor(getActivity().getApplicationContext(), R.drawable.ic_add_location));
                 marker.setDraggable(true);
                 googleMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
                     @Override
@@ -110,7 +111,10 @@ public class gmap extends Fragment {
                         Log.d("JAMIL", "marker drag finished: "+global_variables.buildingX+" "+global_variables.buildingY);
                     }
                 });
-            } else marker.setDraggable(false);
+            } else {
+                marker.setDraggable(false);
+                marker.setIcon(bitmapDescriptor(getActivity().getApplicationContext(), R.drawable.ic_location));
+            }
             //marker.setPosition(sylhet);
             //googleMap.moveCamera(CameraUpdateFactory.newLatLng(sylhet));
 

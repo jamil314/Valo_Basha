@@ -2,7 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 <item
-    android:id="@+id/btn_report"
-    android:title="Report this!"
+    android:id="@+id/btn_fav"
+    android:icon="@drawable/ic_fav_false"
+    android:title="Fav"
     app:showAsAction="always"/>
+    <item
+        android:id="@+id/btn_report"
+        android:icon="@drawable/ic_report"
+        android:title="Report"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/btn_remove"
+        android:icon="@drawable/ic_remove"
+        android:title="Remove"
+        app:showAsAction="always"/>
 </menu>

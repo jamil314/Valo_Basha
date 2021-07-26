@@ -1,5 +1,6 @@
 package com.example.valo_basha;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
@@ -23,6 +24,11 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -38,17 +44,34 @@ public class NewDetails extends AppCompatActivity {
     LinearLayout layoutlist;
     Button add, gallery, camera, proceed;
     Apartment apartment;
-
+    String last;
+    FirebaseUser user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_details);
         Log.d("JAMIL", "Opened intent");
         Intent Cintent = getIntent();
+        last = Cintent.getStringExtra("last");
+        user = FirebaseAuth.getInstance().getCurrentUser();
         apartment = new Apartment();
-        apartment.owner = Cintent.getStringExtra("name");
-        apartment.contactInfo = Cintent.getStringExtra("phone");
-        apartment.uid = Cintent.getStringExtra("id");
+        apartment.uid = user.getUid();
+        DatabaseReference ref = FirebaseDatabase.getInstance("https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                .getReference().child("users").child(user.getUid());
+        ref.child("name").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                apartment.owner = String.valueOf(task.getResult().getValue());
+                Log.d("JAMIL", apartment.owner);
+            }
+        });
+        ref.child("phone").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                apartment.contactInfo = String.valueOf(task.getResult().getValue());
+                Log.d("JAMIL", apartment.contactInfo);
+            }
+        });
         Log.d("JAMIL", apartment.uid);
         getSupportActionBar().setTitle("Fill in all the details");
         if(global_variables.BuildingStatus == 2) {
@@ -133,6 +156,7 @@ public class NewDetails extends AppCompatActivity {
                     apartment.furniture = furniture.isChecked();
                     Intent ri = new Intent(getApplicationContext(), AddPicture.class);
                     ri.putExtra("apartment", (Parcelable) apartment);
+                    ri.putExtra("last", last);
                     Log.d("JAMIL", "going to AddPicture");
                     global_variables.BuildingStatus = 1;
                     startActivity(ri);
@@ -213,6 +237,14 @@ public class NewDetails extends AppCompatActivity {
         Log.d("JAMIL", "Varification result: "+isValid);
         return isValid;
     }
-
+    @Override
+    public void onBackPressed() {
+        if(last.equals("skip")) {
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            finish();
+        } else {
+            finish();
+        }
+    }
 
 }

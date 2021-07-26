@@ -10,15 +10,14 @@
         android:name="com.example.valo_basha.map_container"
         android:label="Map"
         tools:layout="@layout/fragment_map_container" >
-        <action
-            android:id="@+id/action_nav_maps_to_nav_login"
-            app:destination="@id/nav_login" />
     </fragment>
+
     <fragment
         android:id="@+id/nav_login"
         android:name="com.example.valo_basha.fragment_login"
-        android:label="Login / Sign up"
+        android:label="Profile"
         tools:layout="@layout/fragment_login" />
+
     <fragment
         android:id="@+id/nav_share"
         android:name="com.example.valo_basha.fragment_landlord"
@@ -41,5 +40,10 @@
         android:name="com.example.valo_basha.fragment_devs"
         android:label="About Us"
         tools:layout="@layout/fragment_devs" />
+    <fragment
+        android:id="@+id/nav_add"
+        android:name="com.example.valo_basha.add"
+        android:label="Add"
+        tools:layout="@layout/fragment_add" />
 
 </navigation>

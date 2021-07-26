@@ -57,12 +57,14 @@ public class AddPicture extends AppCompatActivity {
     Boolean locationPicked = false;
     ProgressBar stall;
     TextView stallMsg;
+    String last;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_picture);
         Intent intent = getIntent();
         apartment = intent.getParcelableExtra("apartment");
+        last = intent.getStringExtra("last");
         Log.d("JAMIL", "inside AddPicture");
         imagelist = findViewById(R.id.image_container);
         gallery = findViewById(R.id.pic_from_gallery);
@@ -130,7 +132,6 @@ public class AddPicture extends AppCompatActivity {
                 Log.d("JAMIL", String.valueOf(mDatabaseAdd));
                 int id = global_variables.id;
                 apartment.id = id;
-                uploadImage();
                 apartment.lat = global_variables.buildingX;
                 apartment.lon = global_variables.buildingY;
                 apartment.image_count = urilist.size();
@@ -147,6 +148,7 @@ public class AddPicture extends AppCompatActivity {
                 Log.d("JAMIL", "cnt: "+cnt);
                 global_variables.id++;
                 global_variables.cnt++;
+                uploadImage();
                 //finish();
             }
         });
@@ -162,7 +164,11 @@ public class AddPicture extends AppCompatActivity {
             Toast toast = Toast.makeText(getApplicationContext(),
                     "Successfuly added new apartment", Toast.LENGTH_LONG);
             toast.show();
-            finish();
+            if(last.equals("skip")){
+                Intent inten = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(inten);
+                finish();
+            } else finish();
         } else {
             stall.setVisibility(View.VISIBLE);
             stallMsg.setVisibility(View.VISIBLE);
@@ -180,8 +186,11 @@ public class AddPicture extends AppCompatActivity {
                             if(x[0] == 0) {
                                 Toast toast = Toast.makeText(getApplicationContext(),
                                         "Successfuly added new apartment", Toast.LENGTH_LONG);
-                                toast.show();
-                                finish();
+                                toast.show();if(last.equals("skip")){
+                                    Intent inten = new Intent(getApplicationContext(), MainActivity.class);
+                                    startActivity(inten);
+                                    finish();
+                                } else finish();
                             } else stallMsg.setText("Uploading image :"+(y-x[0]+1)+"/"+y+"\nPlease wait");
 
                         }
@@ -193,8 +202,11 @@ public class AddPicture extends AppCompatActivity {
                     if(x[0] == 0) {
                         Toast toast = Toast.makeText(getApplicationContext(),
                                 "Successfuly added new apartment", Toast.LENGTH_LONG);
-                        toast.show();
-                        finish();
+                        toast.show();if(last.equals("skip")){
+                            Intent inten = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(inten);
+                            finish();
+                        } else finish();
                     } else stallMsg.setText("Uploading image :"+(y-x[0]+1)+"/"+y+"\nPlease wait");
 
                 }

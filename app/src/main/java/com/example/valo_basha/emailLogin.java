@@ -71,7 +71,8 @@ public class emailLogin extends AppCompatActivity {
                         if(task.isSuccessful()){
                             Log.d("JAMIL", "Login Successfull");
                             Toast.makeText(emailLogin.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(emailLogin.this, profileActivity.class));
+                            //startActivity(new Intent(emailLogin.this, profileActivity.class));
+                            finish();
                         }
                         else{
                             Log.d("JAMIL", "Login failed: "+task.getException().getMessage());

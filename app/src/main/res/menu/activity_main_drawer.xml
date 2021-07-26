@@ -3,6 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
+
+    <item android:title="Visit your profile">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_login"
+                    android:icon="@drawable/logo_login"
+                    android:title="Profile" />
+            </group>
+        </menu>
+    </item>
+
+
     <item android:title="Looking For a Valo Basa?">
         <menu>
             <group android:checkableBehavior="single">
@@ -14,13 +27,16 @@
         </menu>
     </item>
 
+
+
+
     <item android:title="Have an apartment to rent?">
         <menu>
             <group android:checkableBehavior="single">
                 <item
-                    android:id="@+id/nav_login"
-                    android:icon="@drawable/logo_login"
-                    android:title="Become a landlord" />
+                    android:id="@+id/nav_add"
+                    android:icon="@drawable/ic_baseline_add_business_24"
+                    android:title="Rent out your apartment" />
             </group>
         </menu>
     </item>

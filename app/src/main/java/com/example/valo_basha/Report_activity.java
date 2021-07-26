@@ -3,6 +3,7 @@ package com.example.valo_basha;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.opengl.ETC1;
 import android.os.Bundle;
@@ -11,10 +12,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -43,18 +47,63 @@ public class Report_activity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(invalid()) return;
-                Log.d("JAMIL", "reported "+id);
-                report.building_id = id;
-                DatabaseReference mDatabase;
-                mDatabase = FirebaseDatabase.getInstance("https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app/")
-                        .getReference().child("Reports");
-                Log.d("JAMIL", String.valueOf(mDatabase));
-                mDatabase.push().setValue(report);
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if(user == null){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Report_activity.this);
+                    final View popup = getLayoutInflater().inflate(R.layout.popup_two_option, null);
 
-                Toast toast = Toast.makeText(getApplicationContext(),
-                        "Your report has been recorded\nThanks for bringing it to our attention", Toast.LENGTH_LONG);
-                toast.show();
-                finish();
+                    TextView text = popup.findViewById(R.id.text);
+                    Button yes = popup.findViewById(R.id.op1);
+                    TextView no = popup.findViewById(R.id.op2);
+                    yes.setText("Log In");
+                    no.setText("Deny");
+                    text.setText("Please log in so that we can get back to you");
+
+                    builder.setView(popup);
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                    yes.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent ri = new Intent(getApplicationContext(), profileActivity.class);
+                            startActivity(ri);
+                            dialog.dismiss();
+                        }
+                    });
+                    no.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            report.uid = "null";
+                            Log.d("JAMIL", "reported " + id);
+                            report.building_id = id;
+                            DatabaseReference mDatabase;
+                            mDatabase = FirebaseDatabase.getInstance("https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                                    .getReference().child("Reports");
+                            Log.d("JAMIL", String.valueOf(mDatabase));
+                            mDatabase.push().setValue(report);
+
+                            Toast toast = Toast.makeText(getApplicationContext(),
+                                    "Your report has been recorded\nThanks for bringing it to our attention", Toast.LENGTH_LONG);
+                            toast.show();
+                            finish();
+                            dialog.dismiss();
+                        }
+                    });
+                } else {
+                    report.uid = user.getUid();
+                    Log.d("JAMIL", "reported " + id);
+                    report.building_id = id;
+                    DatabaseReference mDatabase;
+                    mDatabase = FirebaseDatabase.getInstance("https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                            .getReference().child("Reports");
+                    Log.d("JAMIL", String.valueOf(mDatabase));
+                    mDatabase.push().setValue(report);
+
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "Your report has been recorded\nThanks for bringing it to our attention", Toast.LENGTH_LONG);
+                    toast.show();
+                    finish();
+                }
             }
         });
     }

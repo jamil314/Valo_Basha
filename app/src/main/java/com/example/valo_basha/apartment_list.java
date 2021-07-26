@@ -123,7 +123,7 @@ public class apartment_list extends AppCompatActivity {
                 i.putExtra("key", key);
                 Log.d("JAMIL", "passed data successfully");
                 startActivity(i);
-                if(!key.equals("tenent")) recreate();
+                if(!key.equals("tenent")) apartmentList.removeAllViews();
             }
         });
         apartmentList.addView(v);
