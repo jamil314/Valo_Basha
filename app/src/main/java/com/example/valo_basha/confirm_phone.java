@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +37,8 @@ public class confirm_phone extends AppCompatActivity {
     DatabaseReference rtdb;
     FirebaseUser user;
     String uid;
-    TextView mock;
+    TextView mock, msg;
+    ProgressBar stall;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +49,8 @@ public class confirm_phone extends AppCompatActivity {
         get_otp = findViewById(R.id.get_otp);
         confirm_otp = findViewById(R.id.confirm_otp);
         otp = findViewById(R.id.otp);
+        stall = findViewById(R.id.stall);
+        msg = findViewById(R.id.stallMsg);
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
         uid = user.getUid();
@@ -55,10 +59,11 @@ public class confirm_phone extends AppCompatActivity {
         get_otp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(otpSent) return;
                 phone.setVisibility(View.INVISIBLE);
-                mock.setVisibility(View.VISIBLE);
-                otpSent = true;
+                mock.setVisibility(View.INVISIBLE);
+                get_otp.setVisibility(View.INVISIBLE);
+                stall.setVisibility(View.VISIBLE);
+                msg.setVisibility(View.VISIBLE);
                 String no = phone.getText().toString();
                 mock.setText(no);
                 if(no.length() == 11) no = "+88"+no;
@@ -77,8 +82,10 @@ public class confirm_phone extends AppCompatActivity {
 
                             @Override
                             public void onVerificationFailed(@NonNull FirebaseException e) {
+
                                 Toast toast = Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG);
                                 toast.show();
+                                finish();
                             }
 
                             @Override
@@ -87,8 +94,12 @@ public class confirm_phone extends AppCompatActivity {
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
+                                        mock.setVisibility(View.VISIBLE);
                                         confirm_otp.setVisibility(View.VISIBLE);
                                         otp.setVisibility(View.VISIBLE);
+                                        get_otp.setVisibility(View.VISIBLE);
+                                        stall.setVisibility(View.INVISIBLE);
+                                        msg.setVisibility(View.INVISIBLE);
                                         String OTP = otp.getText().toString();
 
                                         confirm_otp.setOnClickListener(new View.OnClickListener() {

@@ -68,6 +68,7 @@ public class ProfileEdit extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_edit);
+        getSupportActionBar().setTitle("Edit profile");
         Log.d("JAMIL", "editing");
         auth = FirebaseAuth.getInstance();
         editPropic = findViewById(R.id.change_profile_pic);

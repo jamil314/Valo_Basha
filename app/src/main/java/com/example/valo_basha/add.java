@@ -79,9 +79,25 @@ public class add extends Fragment {
             toast.show();
 
         } else {
-            Intent intent = new Intent(getActivity(), NewDetails.class);
-            intent.putExtra("last", "skip");
-            startActivity(intent);
+            FirebaseDatabase.getInstance("https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                    .getReference().child("users").child(FirebaseAuth.getInstance().getUid())
+                    .child("phone").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    if(task.getResult().exists()){
+                        Intent intent = new Intent(getActivity(), NewDetails.class);
+                        intent.putExtra("last", "skip");
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(getActivity(), profileActivity.class);
+                        intent.putExtra("last", "skip");
+                        startActivity(intent);
+                        Toast toast = Toast.makeText(getActivity(),
+                                "Please add your phone number from edit section first", Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+                }
+            });
         }
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_add, container, false);

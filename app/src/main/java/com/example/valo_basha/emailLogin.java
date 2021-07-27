@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +28,8 @@ import com.google.firebase.auth.FirebaseUser;
 public class emailLogin extends AppCompatActivity {
     EditText email, pass;
     Button login;
-    TextView forgot, phone, signup, signupPhone;
+    TextView forgot, phone, signup, signupPhone, msg;
+    ProgressBar stall;
     FirebaseAuth fAuth;
     FirebaseUser user;
     ImageView icon;
@@ -41,6 +43,8 @@ public class emailLogin extends AppCompatActivity {
         login = findViewById(R.id.login);
         forgot = findViewById(R.id.forgot);
         signup = findViewById(R.id.sign_up);
+        stall = findViewById(R.id.stall);
+        msg = findViewById(R.id.stallMsg);
         fAuth = FirebaseAuth.getInstance();
         user = fAuth.getCurrentUser();
         if(user!=null){
@@ -62,6 +66,13 @@ public class emailLogin extends AppCompatActivity {
                     return;
                 }
                 Log.d("JAMIL", "Login req sent");
+                email.setVisibility(View.INVISIBLE);
+                pass.setVisibility(View.INVISIBLE);
+                login.setVisibility(View.INVISIBLE);
+                forgot.setVisibility(View.INVISIBLE);
+                signup.setVisibility(View.INVISIBLE);
+                stall.setVisibility(View.VISIBLE);
+                msg.setVisibility(View.VISIBLE);
                 fAuth.signInWithEmailAndPassword(Email, Pass).addOnCompleteListener(emailLogin.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -72,6 +83,13 @@ public class emailLogin extends AppCompatActivity {
                             finish();
                         }
                         else{
+                            email.setVisibility(View.VISIBLE);
+                            pass.setVisibility(View.VISIBLE);
+                            login.setVisibility(View.VISIBLE);
+                            forgot.setVisibility(View.VISIBLE);
+                            signup.setVisibility(View.VISIBLE);
+                            stall.setVisibility(View.INVISIBLE);
+                            msg.setVisibility(View.INVISIBLE);
                             Log.d("JAMIL", "Login failed: "+task.getException().getMessage());
                             Toast.makeText(emailLogin.this, "Login failed: "+task.getException().getMessage()+".Try again", Toast.LENGTH_LONG).show();
 

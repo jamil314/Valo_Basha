@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +27,8 @@ import com.google.firebase.database.FirebaseDatabase;
 public class emailReg extends AppCompatActivity {
     EditText email, pass, con, name;
     Button signup;
-    TextView phone, login;
+    TextView phone, login, msg;
+    ProgressBar stall;
     FirebaseAuth fAuth;
     FirebaseUser user;
     @Override
@@ -41,6 +43,8 @@ public class emailReg extends AppCompatActivity {
         phone = findViewById(R.id.phone);
         login = findViewById(R.id.login);
         name = findViewById(R.id.name);
+        msg = findViewById(R.id.stallMsg);
+        stall = findViewById(R.id.stall);
         fAuth = FirebaseAuth.getInstance();
         user = fAuth.getCurrentUser();
         if(user!=null){
@@ -68,6 +72,16 @@ public class emailReg extends AppCompatActivity {
                     return;
                 }
                 Log.d("JAMIL", "Reg req sent");
+
+                email.setVisibility(View.INVISIBLE);
+                name.setVisibility(View.INVISIBLE);
+                con.setVisibility(View.INVISIBLE);
+                pass.setVisibility(View.INVISIBLE);
+                login.setVisibility(View.INVISIBLE);
+                signup.setVisibility(View.INVISIBLE);
+                stall.setVisibility(View.VISIBLE);
+                msg.setVisibility(View.VISIBLE);
+
                 fAuth = FirebaseAuth.getInstance();
                 fAuth.createUserWithEmailAndPassword(Email, Pass).addOnCompleteListener(emailReg.this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -94,12 +108,28 @@ public class emailReg extends AppCompatActivity {
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
+                                    email.setVisibility(View.VISIBLE);
+                                    pass.setVisibility(View.VISIBLE);
+                                    login.setVisibility(View.VISIBLE);
+                                    name.setVisibility(View.VISIBLE);
+                                    con.setVisibility(View.VISIBLE);
+                                    signup.setVisibility(View.VISIBLE);
+                                    stall.setVisibility(View.INVISIBLE);
+                                    msg.setVisibility(View.INVISIBLE);
                                     Log.d("JAMIL", "Reg failed: "+e.getMessage());
                                     Toast.makeText(emailReg.this, "Email sending failed: "+e.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
 
                         } else {
+                            email.setVisibility(View.VISIBLE);
+                            pass.setVisibility(View.VISIBLE);
+                            login.setVisibility(View.VISIBLE);
+                            name.setVisibility(View.VISIBLE);
+                            con.setVisibility(View.VISIBLE);
+                            signup.setVisibility(View.VISIBLE);
+                            stall.setVisibility(View.INVISIBLE);
+                            msg.setVisibility(View.INVISIBLE);
                             Log.d("JAMIL", "task error: "+task.getException().getMessage());
                             Toast.makeText(emailReg.this, "Failed: "+task.getException(), Toast.LENGTH_SHORT).show();
                         }

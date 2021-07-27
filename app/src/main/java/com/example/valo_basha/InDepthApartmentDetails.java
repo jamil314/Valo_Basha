@@ -46,7 +46,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.smarteist.autoimageslider.SliderView;
 
 import java.io.File;
 import java.io.IOException;
