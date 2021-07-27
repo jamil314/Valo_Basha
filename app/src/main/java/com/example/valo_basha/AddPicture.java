@@ -293,6 +293,7 @@ public class AddPicture extends AppCompatActivity {
         return image;
     }
     private void dispatchTakePictureIntent() {
+        Log.d("JAMMIL", "dispatchpucturetake");
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {

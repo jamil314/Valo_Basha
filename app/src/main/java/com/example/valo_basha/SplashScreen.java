@@ -49,6 +49,7 @@ public class SplashScreen extends AppCompatActivity {
                 Log.d("JAMIL", "Id accessed");
                 if(global_variables.idDone) return;
                 global_variables.idDone = true;
+                Log.d("JAMIL", task.isSuccessful()+"");
                 global_variables.id = Integer.parseInt(task.getResult().getValue().toString());
                 Log.d("JAMIL", "Id: "+global_variables.id);
             }

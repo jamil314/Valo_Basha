@@ -1,8 +1,10 @@
 package com.example.valo_basha;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -89,6 +92,64 @@ public class fragment_devs extends Fragment {
 
         TextView text = view.findViewById(R.id.text);
         ImageView image = view.findViewById(R.id.image);
+        Button fb, insta, gmail, link, git, cf;
+        fb = view.findViewById(R.id.facebook);
+        insta = view.findViewById(R.id.instagram);
+        gmail = view.findViewById(R.id.gmail);
+        link = view.findViewById(R.id.linkedin);
+        git = view.findViewById(R.id.github);
+        cf = view.findViewById(R.id.codeforcs);
+
+        fb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/jamil314/"));
+                startActivity(browserIntent);
+            }
+        });
+
+        insta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/jamil_ur1999/"));
+                startActivity(browserIntent);
+            }
+        });
+
+        link.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.linkedin.com/in/jamilur-rahman-477797195/"));
+                startActivity(browserIntent);
+            }
+        });
+
+        git.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/jamil314"));
+                startActivity(browserIntent);
+            }
+        });
+
+        cf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://codeforces.com/profile/jamil314"));
+                startActivity(browserIntent);
+            }
+        });
+
+        gmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent  = new Intent(Intent.ACTION_VIEW, Uri.parse("mailto:jamil31415926@gmail.com"));
+                startActivity(intent);
+            }
+        });
+
+
+
         DatabaseReference mDatabase;
         mDatabase = FirebaseDatabase.getInstance("https://maaaaap-default-rtdb.asia-southeast1.firebasedatabase.app/")
                 .getReference().child("dev").child("info");
